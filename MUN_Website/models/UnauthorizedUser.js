@@ -1,4 +1,4 @@
-class unauthorizedUser
+class UnauthorizedUser
 {
     constructor(id, name)
     {
@@ -7,4 +7,4 @@ class unauthorizedUser
     }
 }
 
-module.exports=unauthorizedUser;
+module.exports=UnauthorizedUser;

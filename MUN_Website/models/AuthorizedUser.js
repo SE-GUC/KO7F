@@ -1,4 +1,4 @@
-class authorizedUser
+class AuthorizedUser
 {
     constructor(id, name)
     {
