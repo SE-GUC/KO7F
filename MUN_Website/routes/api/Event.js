@@ -1,13 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
-const Book = require('../../models/Event')
+const Event = require('../../models/Event')
 
-const Library = [
-    new PortalLibrary('Event', 'We agreed on ...'),
-    new PortalLibrary('Event', 'We decided to ...')
+const EventArr = [
+    new Event('Cinema gathering','Point 90'),
+    new Event('Football match','Mal3ab El Bokhary')
 ];
 
-router.get('/', (req, res) => res.json({ data: books }))
+router.get('/', (req, res) => res.json({  EventArr  }))
+
 
 module.exports = router

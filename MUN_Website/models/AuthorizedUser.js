@@ -1,9 +1,11 @@
+const uuid = require('uuid')
+
 class AuthorizedUser
 {
-    constructor(id, name)
+    constructor(name)
     {
-        this.id=id;
         this.name=name;
+        this.id = uuid.v4();
     }
 }
 

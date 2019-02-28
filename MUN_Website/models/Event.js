@@ -1,10 +1,12 @@
+const uuid = require('uuid')
+
 class Event
 {
-    constructor(id, name, details)
+    constructor(name, details)
     {
-        this.id=id;
         this.name=name;
         this.details=details;
+        this.id = uuid.v4();
     }
 }
 

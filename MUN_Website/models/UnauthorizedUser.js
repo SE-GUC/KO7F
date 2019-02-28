@@ -1,8 +1,7 @@
 class UnauthorizedUser
 {
-    constructor(id, name)
+    constructor(name)
     {
-        this.id=id;
         this.name=name;
     }
 }
