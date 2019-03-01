@@ -1,10 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const Events = require('./routes/api/Events');
+const PortalLibraries = require('./routes/api/PortalLibraries')
 
-const Event = require('./routes/api/Event');
-const AuthorizedUser = require('./routes/api/AuthorizedUser')
-
+//set up express
 const app = express();
+
 app.use(express.json());
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.send(`<h1>Welcome to MUN</h1>
@@ -12,8 +15,11 @@ app.get('/', (req, res) => {
     `);
 })
 
-//calling the methods I made on the authorized user
-app.use('/api/AuthorizedUser',AuthorizedUser);
+//calling the methods I made on Event
+app.use('/api/Event',Events);
+
+//calling the methods I made on PortalLibrary
+app.use('/api/PortalLibrary',PortalLibraries);
 
 // Handling 404
 app.use((req, res) => {
