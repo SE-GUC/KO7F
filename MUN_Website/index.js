@@ -5,6 +5,8 @@ const PortalLibraries = require('./routes/api/PortalLibraries')
 const RegistrationForms = require('./routes/api/RegistrationForms')
 const Timelines = require('./routes/api/Timelines')
 const UnauthorizedUser = require('./routes/api/UnauthorizedUser')
+const Accounts = require('./routes/api/Accounts');
+const Announcement = require ('./routes/api/Announcement');
 
 //set up express
 const app = express();
@@ -18,6 +20,11 @@ app.get('/', (req, res) => {
     <a href="/api/Event">Event</a>
     `);
 })
+//calling the methods on Announcement class
+app.use('/api/Account',Announcement);
+
+//calling the methods on Accounts class
+app.use('/api/Account',Accounts);
 
 //calling the methods on Timelines class
 app.use('/api/Timeline',Timelines);
