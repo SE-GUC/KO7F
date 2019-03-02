@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const uuid = require('uuid');
 
-const Event = require('../../models/Event')
+const Announcement = require('../../models/Announcement')
 
 const AnnouncementArr = 
 [
@@ -56,3 +56,5 @@ router.put('/UpdateAnnouncement/:id',(req,res) =>
 });
 //As an Authorized User I can read announcements
 router.get('/Announcement', (req, res) => res.json({ data : AnnouncementArr }))
+
+module.exports = router;
