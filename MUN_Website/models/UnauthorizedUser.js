@@ -1,9 +1,14 @@
+const uuid = require('uuid');
+
+//The UnauthorizedUser
 class UnauthorizedUser
 {
-    constructor(name)
+    constructor(username, password)
     {
-        this.name=name;
+        this.id = uuid.v4();
+        this.username=username;
+        this.password = password;
     }
 }
 
-module.exports=UnauthorizedUser;
+module.exports = UnauthorizedUser;
