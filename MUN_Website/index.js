@@ -8,6 +8,7 @@ const UnauthorizedUser = require('./routes/api/UnauthorizedUser')
 const Accounts = require('./routes/api/Accounts');
 const Announcement = require ('./routes/api/Announcement');
 const Questions = require('./routes/api/Questions')
+const AuthorizedUser=require('./routes/api/AuthorizedUser')
 
 //set up express
 const app = express();
@@ -44,6 +45,9 @@ app.use('/api/PortalLibrary',PortalLibraries);
 
 //calling the methods on UnauthorizedUser class
 app.use('/api/Unauthorizeduser', UnauthorizedUser);
+
+//calling the methods on authorized account 
+app.use ('/api/AuthorizedUser',AuthorizedUser);
 
 // Handling 404
 app.use((req, res) => {

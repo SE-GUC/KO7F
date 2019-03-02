@@ -91,4 +91,29 @@ router.put('/UpdateAccount/:id',(req,res) =>
 });
 });
 
+// as authorized user i can delete my account
+router.delete('/:name',(req,res) => 
+{
+    const isEntered = AuthorizedUserArr.some(AuthorizedUser => AuthorizedUser.name===(req.params.name));
+    if(isEntered)
+    {
+        AuthorizedUserArr.forEach(AuthorizedUser => 
+        {
+            if (AuthorizedUser.name===(req.params.name))
+            { 
+    
+                delete AuthorizedUser.id;
+                delete AuthorizedUser.name;
+                
+
+                res.json({msg:'The user  is deleted successfully', AuthorizedUserArr});
+            }
+        })
+    }
+    else
+    {
+      res.status(404).json({msg: 'Error on deleting this user'})  
+    }
+});
+
 module.exports = router

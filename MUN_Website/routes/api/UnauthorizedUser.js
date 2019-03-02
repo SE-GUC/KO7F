@@ -55,4 +55,29 @@ router.get('/', (req, res) => {
     res.send(UnauthorizedUsers)
 })
 
+// as authorized user i can delete unathorized user 
+router.delete('/:id',(req,res) => 
+{
+    const isEntered = UnauthorizedUsers.some(UnauthorizedUser => UnauthorizedUser.id===parseInt(req.params.id));
+    if(isEntered)
+    {
+        UnauthorizedUsers.forEach(UnauthorizedUser => 
+        {
+            if (UnauthorizedUser.id===parseInt(req.params.id))
+            { 
+    
+                delete UnauthorizedUser.id;
+                delete UnauthorizedUser.name;
+                delete unauthorizedUser.password;
+
+                res.json({msg:'The user  is deleted successfully', UnauthorizedUsers});
+            }
+        })
+    }
+    else
+    {
+      res.status(404).json({msg: 'Error on deleting this user'})  
+    }
+});
+
 module.exports = router;
