@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Events = require('./routes/api/Events');
 const PortalLibraries = require('./routes/api/PortalLibraries')
+const RegistrationForms = require('./routes/api/RegistrationForms')
+const Timelines = require('./routes/api/Timelines')
 
 //set up express
 const app = express();
@@ -15,10 +17,16 @@ app.get('/', (req, res) => {
     `);
 })
 
-//calling the methods I made on Event
+//calling the methods on Timelines class
+app.use('/api/Timeline',Timelines);
+
+//calling the methods on RegistrationForms class
+app.use('/api/RegistrationForm',RegistrationForms);
+
+//calling the methods on Events class
 app.use('/api/Event',Events);
 
-//calling the methods I made on PortalLibrary
+//calling the methods on PortalLibraries class
 app.use('/api/PortalLibrary',PortalLibraries);
 
 // Handling 404
