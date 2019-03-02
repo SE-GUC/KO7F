@@ -7,6 +7,7 @@ const Timelines = require('./routes/api/Timelines')
 const UnauthorizedUser = require('./routes/api/UnauthorizedUser')
 const Accounts = require('./routes/api/Accounts');
 const Announcement = require ('./routes/api/Announcement');
+const Questions = require('./routes/api/Questions')
 
 //set up express
 const app = express();
@@ -20,8 +21,11 @@ app.get('/', (req, res) => {
     <a href="/api/Event">Event</a>
     `);
 })
+//calling the methods on Questions class
+app.use('/api/Question',Questions);
+
 //calling the methods on Announcement class
-app.use('/api/Account',Announcement);
+app.use('/api/Announcement',Announcement);
 
 //calling the methods on Accounts class
 app.use('/api/Account',Accounts);
