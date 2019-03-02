@@ -4,11 +4,13 @@ const Events = require('./routes/api/Events');
 const PortalLibraries = require('./routes/api/PortalLibraries')
 const RegistrationForms = require('./routes/api/RegistrationForms')
 const Timelines = require('./routes/api/Timelines')
+const UnauthorizedUser = require('./routes/api/UnauthorizedUser')
 
 //set up express
 const app = express();
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
@@ -28,6 +30,9 @@ app.use('/api/Event',Events);
 
 //calling the methods on PortalLibraries class
 app.use('/api/PortalLibrary',PortalLibraries);
+
+//calling the methods on UnauthorizedUser class
+app.use('/api/Unauthorizeduser', UnauthorizedUser);
 
 // Handling 404
 app.use((req, res) => {
