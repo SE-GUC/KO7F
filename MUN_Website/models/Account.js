@@ -2,7 +2,7 @@ const uuid = require('uuid')
 
 class Account
 {
-    constructor(Account_id, name, password, age, major)
+    constructor(Account_id, username, password, age, major)
     {
         this.Account_id = Account_id;
         this.username = username;
