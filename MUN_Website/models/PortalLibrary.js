@@ -1,14 +1,20 @@
-const uuid = require('uuid')
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-class PortalLibrary
-{
-    constructor(portalLibrary_id,title, details)
+// Create the schema
+const PortalLibrarySchema = new Schema
+({
+    title: 
     {
-        this.portalLibrary_id = portalLibrary_id;
-        this.title=title;
-        this.details=details;
-        this.id = uuid.v4();
+        type: String,
+        required: [true, 'Title field is required']
+    },
+    details: 
+    {
+        type: String,
+        required: [true, 'Details field is required']
     }
-}
+})
 
-module.exports=PortalLibrary;
+const portalLibrary =  mongoose.model('PortalLibrary_DB', PortalLibrarySchema)
+module.exports = portalLibrary

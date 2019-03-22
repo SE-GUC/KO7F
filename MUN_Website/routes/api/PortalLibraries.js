@@ -1,42 +1,31 @@
 const express = require('express')
 const router = express.Router()
-const uuid = require('uuid')
+const mongoose = require('mongoose')
 
 const PortalLibrary = require('../../models/PortalLibrary')
-
-const PortalLibraryArr = 
-[
-    new PortalLibrary(1,'1st Meeting', 'We agreed on ...'),
-    new PortalLibrary(2,'2nd Meeting', 'We decided to ...')
-];
+const validator = require('../../validations/PortalLibraryValidations')
 
 //As an Authorized User I should be able to read the PortalLibrary
-router.get('/PortalLibrary', (req, res) => res.json({ data : PortalLibraryArr }))
+router.get('/', async (req,res) => {
+    const PortalLibraries = await PortalLibrary.find() 
+    res.json({data: PortalLibraries})
+})
 
 //As an Authorized User I should be able to add to the PortalLibrary
-router.post('/PortalLibrary', (req, res) =>
-{
-    const portalLibrary_id=req.body.portalLibrary_id;
-    const title = req.body.title;
-    const details=req.body.details;
-    
-    if (!portalLibrary_id || typeof portalLibrary_id !== 'number') 
-        return res.status(404).send({err:'You must enter the PortalLibrary ID and as an integer'});
-    if (!title) 
-        return res.status(404).send({err: 'You must enter a title'});
-    if (!details) 
-        return res.status(404).send({err: 'You must enter details'});
-
-    const Created_PortalLibrary = 
+router.post('/', async (req,res) => 
+{   
+    try 
     {
-        portalLibrary_id,
-        title,
-        details,
-        id: uuid.v4(),
-    };
-
-    PortalLibraryArr.push(Created_PortalLibrary)
-    res.send(PortalLibraryArr)
-});
+        const isValidated = validator.createValidation(req.body)
+        if (isValidated.error) return res.status(400).send({ error: isValidated.error.details[0].message })
+        const newPortalLibrary = await PortalLibrary.create(req.body)
+        res.json({msg:'Portal Library was created successfully', data: newPortalLibrary})
+        res.send(newPortalLibrary)
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }
+})
 
 module.exports = router

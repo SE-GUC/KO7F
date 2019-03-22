@@ -1,15 +1,22 @@
-const uuid = require('uuid')
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-class Event
-{
-    constructor(event_id,name, details, rating)
-    {
-        this.event_id = event_id;
-        this.name=name;
-        this.details=details;
-        this.rating=rating;
-        this.id = uuid.v4();
+// Create the schema
+const EventSchema = new Schema
+({
+    name: {
+        type: String,
+        required: [true, 'Name field is required']
+    },
+    details: {
+        type: String,
+        required: [true, 'Details field is required']
+    },
+    rating: {
+        type: Number,
+        required: false
     }
-}
+})
 
-module.exports = Event;
+const event =  mongoose.model('Event_DB', EventSchema)
+module.exports = event
