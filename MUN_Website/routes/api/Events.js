@@ -1,91 +1,70 @@
 const express = require('express')
 const router = express.Router()
-const uuid = require('uuid');
+const mongoose = require('mongoose')
 
 const Event = require('../../models/Event')
-
-const EventsArr = 
-[
-    new Event(1,'Cinema gathering','Point 90',5),
-    new Event(2,'Football match','Mal3ab El Bokhary',5)
-];
+const validator = require('../../validations/EventValidations')
 
 //As an Authorized User and Non Authorized User I should be able to read Events 
-router.get('/Event', (req, res) => res.json({ data : EventsArr }))
+router.get('/', async (req,res) => {
+    const Events = await Event.find()
+    res.json({data: Events})
+})
 
 //As an Authorized User I should be able to create Events
-router.post('/CreateEvent', (req, res) =>
-{
-    const event_id=req.body.event_id;
-    const name = req.body.name;
-    const details=req.body.details;
-    
-    if (!event_id || typeof event_id !== 'number') 
-        return res.status(404).send({err:'You must enter the Event ID and as an integer'});
-    if (!name) 
-        return res.status(404).send({err: 'You must enter a name'});
-    if (!details) 
-        return res.status(404).send({err: 'You must enter details'});
-
-    const Created_Event = 
+router.post('/', async (req,res) => 
+{   
+    try 
     {
-        event_id,
-        name,
-        details,
-        id: uuid.v4(),
-    };
-
-    EventsArr.push(Created_Event)
-    res.send(EventsArr)
-});
+        const isValidated = validator.createValidation(req.body)
+        if (isValidated.error) return res.status(400).send({ error: isValidated.error.details[0].message })
+        const newEvent = await Event.create(req.body)
+        res.json({msg:'Event was created successfully', data: newEvent})
+        res.send(newEvent)
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }
+})
 
 //As an Authorized User I should be able to update Events
-router.put('/UpdateEvent/:id',(req,res) => 
-{
-    const isEntered = EventsArr.some(Event => Event.event_id===parseInt(req.params.id));
-    if(isEntered)
+router.put('/:id', async (req,res) => {
+    try 
     {
-        const eventUpdated=req.body;
-        EventsArr.forEach(Event => 
-        {
-            if (Event.event_id===parseInt(req.params.id))
-            {
-                Event.name=eventUpdated.name?eventUpdated.name:Event.name;
-                Event.details=eventUpdated.details?eventUpdated.details:Event.details;
-                res.json({msg: 'The event is updated successfully', Event});
-            }
-        })
+        const IsEvent = await Event.findOne(req.param.id)
+     
+        if(!IsEvent) 
+            return res.status(404).send({error: 'Event does not exist'})
+        
+        const isValidated = validator.updateValidation(req.body)
+        
+        if (isValidated.error) 
+            return res.status(400).send({ error: isValidated.error.details[0].message })
+        
+        const updatedEvent = await Event.updateOne(req.body)
+        res.json({msg: 'Event updated successfully',data: updatedEvent})
     }
-    else
+    catch(error) 
     {
-      res.status(404).json({msg: 'Nothing have changed'})  
-    }
-});
+        console.log(error)
+    }  
+ })
 
 //As an Authorized User I should be able to delete Events
-router.delete('/DeleteEvent/:id',(req,res) => 
+router.delete('/:id', async (req,res) => 
 {
-    const isEntered = EventsArr.some(Event => Event.event_id===parseInt(req.params.id));
-    if(isEntered)
+    try 
     {
-        EventsArr.forEach(Event => 
-        {
-            if (Event.event_id===parseInt(req.params.id))
-            { 
-                delete Event.event_id;
-                delete Event.name;
-                delete Event.details;
-                delete Event.rating;
-                delete Event.id;
-                res.json({msg:'The event is deleted successfully', EventsArr});
-            }
-        })
+        const id = req.params.id
+        const deletedEvent = await Event.findByIdAndRemove(id)
+        res.json({msg:'Event was deleted successfully', data: deletedEvent})
     }
-    else
+    catch(error) 
     {
-      res.status(404).json({msg: 'Error on deleting the Event'})  
-    }
-});
+        console.log(error)
+    }  
+ })
 
 //As an Non Authorized User I should be able to rate Events
 router.put('/RateEvent/:id', (req,res) =>
@@ -108,6 +87,5 @@ router.put('/RateEvent/:id', (req,res) =>
       res.status(404).json({msg: 'Nothing have changed'})  
     }
 })
-
 
 module.exports = router

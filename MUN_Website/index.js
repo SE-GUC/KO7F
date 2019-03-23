@@ -1,5 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
+const mongoose = require('mongoose')
+
+// Require Router Handlers
 const Events = require('./routes/api/Events');
 const PortalLibraries = require('./routes/api/PortalLibraries')
 const RegistrationForms = require('./routes/api/RegistrationForms')
@@ -13,15 +16,24 @@ const AuthorizedUser=require('./routes/api/AuthorizedUser')
 //set up express
 const app = express();
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// DB Config
+const db = require('./config/Key_Dev').mongoURI
 
+// Connect to mongo
+mongoose.connect(db, { useNewUrlParser: true }).then(() => console.log('Connected to MongoDB')).catch(err => console.log(err))
+
+// Init middleware
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
+//app.use(bodyParser.json());
+
+//entry point
 app.get('/', (req, res) => {
     res.send(`<h1>Welcome to MUN</h1>
     <a href="/api/Event">Event</a>
     `);
 })
+
 //calling the methods on Questions class
 app.use('/api/Question',Questions);
 
