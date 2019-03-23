@@ -93,4 +93,63 @@ router.delete('/DeleteAccount/:id',(req,res) =>
     }
 });
 
+//As an Authorized User I should be able to create Events
+router.post('/', async (req,res) => 
+{   
+    try 
+    {
+        const isValidated = validator.createValidation(req.body)
+        if (isValidated.error) return res.status(400).send({ error: isValidated.error.details[0].message })
+        const newAuthorizedAccount = await AuthorizedAccount.create(req.body)
+        res.json({msg:'AuthorizedAccount was created successfully', data: newAuthorizedAccount})
+        res.send(newAuthorizedAccount)
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }
+})
+
+//////////////////////////////////////////////////
+router.put('/:id', async (req,res) => {
+    try 
+    {
+        const IsAuthorizedAccount = await AuthorizedAccount.findOne(req.param.id)
+     
+        if(!IsAuthorizedAccount) 
+            return res.status(404).send({error: 'AuthorizedAccount does not exist'})
+        
+        const isValidated = validator.updateValidation(req.body)
+        
+        if (isValidated.error) 
+            return res.status(400).send({ error: isValidated.error.details[0].message })
+        
+        const updatedAuthorizedAccount = await AuthorizedAccount.updateOne(req.body)
+        res.json({msg: 'AuthorizedAccount updated successfully',data: updatedAuthorizedAccount})
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }  
+ })
+
+///////////////////////////////////////////////////
+
+router.delete('/:id', async (req,res) => 
+{
+    try 
+    {
+        const id = req.params.id
+        const deletedAuthorizedAccount = await AuthorizedAccount.findByIdAndRemove(id)
+        res.json({msg:'AuthorizedAccount was deleted successfully', data: deletedAuthorizedAccount})
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }  
+ })
+
+///////////////////////////////////////
+
+
 module.exports = router
