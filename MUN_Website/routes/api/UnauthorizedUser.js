@@ -81,3 +81,77 @@ router.delete('/:id',(req,res) =>
 });
 
 module.exports = router;
+
+const express = require('express')
+const router = express.Router()
+const mongoose = require('mongoose')
+
+const UnauthorizedUser = require('../../models/UnauthorizedUser')
+const validator = require('../../validations/UnauthorizedUserValidations')
+
+///////////////////////////////////////////////////
+router.get('/', async (req,res) => {
+    const UnauthorizedUser = await UnauthorizedUser.find()
+    res.json({data: UnauthorizedUser})
+})
+
+//As an Authorized User I should be able to create Events
+router.post('/', async (req,res) => 
+{   
+    try 
+    {
+        const isValidated = validator.createValidation(req.body)
+        if (isValidated.error) return res.status(400).send({ error: isValidated.error.details[0].message })
+        const newUnauthorizedUser = await UnauthorizedUser.create(req.body)
+        res.json({msg:'UnauthorizedUser was created successfully', data: newUnauthorizedUser})
+        res.send(newUnauthorizedUser)
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }
+})
+/////////////////////////////////////
+
+router.put('/:id', async (req,res) => {
+    try 
+    {
+        const IsUnauthorizedUser = await  UnauthorizedUser.findOne(req.param.id)
+     
+        if(!IsUnauthorizedUser) 
+            return res.status(404).send({error: ' UnauthorizedUser does not exist'})
+        
+        const isValidated = validator.updateValidation(req.body)
+        
+        if (isValidated.error) 
+            return res.status(400).send({ error: isValidated.error.details[0].message })
+        
+        const updatedUnauthorizedUser = await  UnauthorizedUser.updateOne(req.body)
+        res.json({msg: ' UnauthorizedUser updated successfully',data: updatedUnauthorizedUser})
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }  
+ })
+
+
+///////////////////////////////
+router.delete('/:id', async (req,res) => 
+{
+    try 
+    {
+        const id = req.params.id
+        const deletedUnauthorizedUser = await UnauthorizedUser.findByIdAndRemove(id)
+        res.json({msg:'UnauthorizedUser was deleted successfully', data: deletedUnauthorizedUser})
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }  
+ })
+
+module.exports = router
+
+
+
