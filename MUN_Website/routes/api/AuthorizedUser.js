@@ -1,12 +1,8 @@
 const express = require('express')
 const router = express.Router()
-
+const mongoose = require('mongoose')
 const AuthorizedUser = require('../../models/AuthorizedUser');
 
-const AuthorizedUserArr = [
-    new AuthorizedUser('Omar'),
-    new AuthorizedUser('7ooda')
-];
 
 // update an acoount 
 router.put('/UpdateAccount/:id',(req,res) => 
@@ -92,28 +88,20 @@ router.put('/UpdateAccount/:id',(req,res) =>
 });
 
 // as authorized user i can delete my account
-router.delete('/:name',(req,res) => 
-{
-    const isEntered = AuthorizedUserArr.some(AuthorizedUser => AuthorizedUser.name===(req.params.name));
-    if(isEntered)
-    {
-        AuthorizedUserArr.forEach(AuthorizedUser => 
-        {
-            if (AuthorizedUser.name===(req.params.name))
-            { 
-    
-                delete AuthorizedUser.id;
-                delete AuthorizedUser.name;
-                
 
-                res.json({msg:'The user  is deleted successfully', AuthorizedUserArr});
-            }
-        })
-    }
-    else
+
+router.delete('/:id', async (req,res) => 
+{
+    try 
     {
-      res.status(404).json({msg: 'Error on deleting this user'})  
+        const id = req.params.id
+        const deletedauthorizedUser = await Event.findByIdAndRemove(id)
+        res.json({msg:'user was deleted successfully', data: deletedauthorizedUser})
     }
-});
+    catch(error) 
+    {
+        console.log(error)
+    }  
+ })
 
 module.exports = router

@@ -1,14 +1,20 @@
-const uuid = require('uuid');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-//The UnauthorizedUser
-class UnauthorizedUser
-{
-    constructor(username, password)
-    {
-        this.id = uuid.v4();
-        this.username=username;
-        this.password = password;
+
+// Create the schema
+const UnauthorizedUserSchema = new Schema
+({
+    username: {
+        type: String,
+        required: [true, 'Name field is required']
+    },
+    password: {
+        type: String,
+        required: [true, 'Details field is required']
+    },
     }
-}
+)
 
-module.exports = UnauthorizedUser;
+const UnauthorizedUser =  mongoose.model('UnauthorizedDB', UnauthorizedUserSchema)
+module.exports = UnauthorizedUser

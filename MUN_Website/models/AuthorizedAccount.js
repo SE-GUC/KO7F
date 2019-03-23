@@ -1,18 +1,26 @@
-
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 //Auth-account
-const uuid = require('uuid')
 
-class Create_Account
-{
-    constructor(Account_id, name, password, age, major)
-    {
-        this.Account_id = Account_id;
-        this.username = username;
-        this.password = password
-        this.age = age;
-        this.major = major;
-        this.id = uuid.v4();
-    }
-}
+const authorizedUserSchema = new Schema
+({
+    username: {
+        type: String,
+        required: [true, 'Name field is required']
+    },
+    password: {
+        type: String,
+        required: [true, 'password field is required']
+    },
+    age: {
+        type: String,
+        required: false
+    },
+    major: {
+        type: string,
+        required: false
+    }},
+)
 
-module.exports= Create_Account;
+const authorizedUser =  mongoose.model('authorizedDB', authorizedUserSchema)
+module.exports = authorizedUser

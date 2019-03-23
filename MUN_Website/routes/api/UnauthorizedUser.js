@@ -56,28 +56,18 @@ router.get('/', (req, res) => {
 })
 
 // as authorized user i can delete unathorized user 
-router.delete('/:id',(req,res) => 
+
+router.delete('/:id', async (req,res) => 
 {
-    const isEntered = UnauthorizedUsers.some(UnauthorizedUser => UnauthorizedUser.id===parseInt(req.params.id));
-    if(isEntered)
+    try 
     {
-        UnauthorizedUsers.forEach(UnauthorizedUser => 
-        {
-            if (UnauthorizedUser.id===parseInt(req.params.id))
-            { 
-    
-                delete UnauthorizedUser.id;
-                delete UnauthorizedUser.name;
-                delete unauthorizedUser.password;
-
-                res.json({msg:'The user  is deleted successfully', UnauthorizedUsers});
-            }
-        })
+        const id = req.params.id
+        const deletedUnauthorizedUser = await Event.findByIdAndRemove(id)
+        res.json({msg:'user was deleted successfully', data: deletedUnauthorizedUser})
     }
-    else
+    catch(error) 
     {
-      res.status(404).json({msg: 'Error on deleting this user'})  
-    }
-});
-
+        console.log(error)
+    }  
+ })
 module.exports = router;
