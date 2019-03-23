@@ -1,6 +1,34 @@
 const uuid = require('uuid')
 
-class Account
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+// Create the schema
+const AccountSchema = new Schema
+({
+    username: {
+        type: String,
+        required: [true, 'Name field is required']
+    },
+    password: {
+        type: String,
+        required: [true, 'Details field is required']
+    },
+    age: {
+        type: Number,
+        required: false
+    }
+    ,
+    major: {
+        type: String,
+        required: [true, 'Details field is required']
+    },
+})
+
+const event =  mongoose.model('Event_DB', EventSchema)
+module.exports = Account
+
+/*class Account
 {
     constructor(Account_id, username, password, age, major)
     {
@@ -12,5 +40,5 @@ class Account
         this.id = uuid.v4();
     }
 }
-
+*/
 module.exports = Account;
