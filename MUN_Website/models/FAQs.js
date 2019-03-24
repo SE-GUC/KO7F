@@ -1,16 +1,17 @@
-const uuid = require('uuid')
- class FAQs {
-    
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const FAQsSchema = new Schema
+({
+    reply: {
+        type :string,
+        required :false
+    },
+    content:{
+        type:string,
+        required : [true,'content is required']
+    },
 
-
-
-    constructor(FAQ_id, content)
-    {
-        this.FAQ_id = FAQ_id;
-        this.reply='';
-        this.content=content;
-        this.id = uuid.v4();
-    }
-}
+})
+const FAQs =  mongoose.model('FAQs_DB', FAQsSchema)
 
 module.exports = FAQs;

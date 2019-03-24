@@ -1,18 +1,29 @@
 const express = require('express')
 const router = express.Router();
+const mongoose = require('mongoose')
 
 const FAQs = require('../../models/FAQs')
+const validator = require('../../validations/FAQsValidations')
 
-const FAQsArr =
+/*const FAQsArr =
 [
   new FAQs=(1,'am i supposed to fail this course'),
   new FAQs=(2,'ko7f')
 
 
-];
+];*/
+
+
+
+
 //As an Authorized User I should be able to read FAQs
 router.get('/FAQs', (req, res) => res.json({ data : FAQsArr }))
-//As an unAuthorized User I should be able to create FAQs
+
+
+
+
+
+/*As an unAuthorized User I should be able to create FAQs
 router.post('/CreateFAQs', (req, res) =>
 {
     const FAQs_id=req.body.FAQs_id;
@@ -84,7 +95,72 @@ router.delete('/DeleteFAQs/:id',(req,res) =>
     }
 });
 
-module.exports = router
+module.exports = router*/
+
+
+//As an Authorized User I should be able to add to the FAQs
+router.post('/', async (req,res) => 
+{   
+    try 
+    {
+        const isValidated = validator.createValidation(req.body)
+        if (isValidated.error) return res.status(400).send({ error: isValidated.error.details[0].message })
+        const newFAQs = await FAQs.create(req.body)
+        res.json({msg:'question was created successfully', data: newFAQs})
+        res.send(newFAQs)
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }
+})
+//As an Authorized User I should be able to update Events
+router.put('/:id', async (req,res) => {
+    try 
+    {
+        const IsFAQs = await FAQs.findOne(req.param.id)
+     
+        if(!IsFAQs) 
+            return res.status(404).send({error: 'Event does not exist'})
+        
+        const isValidated = validator.updateValidation(req.body)
+        
+        if (isValidated.error) 
+            return res.status(400).send({ error: isValidated.error.details[0].message })
+        
+        const updatedFAQs = await FAQs.updateOne(req.body)
+        res.json({msg: 'FAQ has been replied to successfully',data: updatedFAQs})
+    }
+    catch(error) 
+    {
+        console.log(error)
+    }  
+ })
+ module.exports = router
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   
