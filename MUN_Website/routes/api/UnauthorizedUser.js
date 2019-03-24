@@ -3,6 +3,7 @@ const router = express.Router();
 const uuid = require('uuid');
 const UnauthorizedUser = require('../../models/UnauthorizedUser');
 const UnauthorizedUsers = [];
+const event= require('../../models/Event')
 
 //I can create account  using the user name and password
 router.post('/', (req, res) => {
@@ -17,6 +18,17 @@ router.post('/', (req, res) => {
     };
     UnauthorizedUsers.push(unauthorizedUser)
 	res.send(unauthorizedUser)
+})
+router.put('/addcomments/:id', (req, res) => {
+    const comment = req.body.comment
+    event.findByIdAndUpdate(req.params.id, req.body,{new:true},(error,e)=>{
+        if(error){
+            return res.json({error: `can't`})
+        }else{
+            return res.json({data:e})
+        }
+    })
+    
 })
 
 //I can update account like profile attributes
