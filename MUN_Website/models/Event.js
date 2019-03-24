@@ -15,7 +15,11 @@ const EventSchema = new Schema
     rating: {
         type: Number,
         required: false
-    }
+    },
+    comments: [{
+      type:String,
+      required:false  
+    }]
 })
 
 const event =  mongoose.model('Event_DB', EventSchema)
