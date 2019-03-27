@@ -1,5 +1,4 @@
 const express = require("express");
-//const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 
 // Require Router Handlers
@@ -35,6 +34,8 @@ app.get("/", (req, res) => {
     <a href="/api/Event">Event</a>
     `);
 });
+/*app.get("/", (req, res) => res.send(`<h1>Welcome to MUN</h1>`));
+app.get("/test", (req, res) => res.send(`<h1>Deployed on Heroku</h1>`));*/
 
 //calling the methods on Questions class
 app.use("/api/Question", Questions);
@@ -67,5 +68,13 @@ app.use("/api/AuthorizedUser", AuthorizedUser);
 app.use((req, res) => {
   res.status(404).send({ err: "We can not find what you are looking for" });
 });
-const port = 3000;
-app.listen(port, () => console.log(`Server up and running on port ${port}`));
+
+var port = process.env.PORT || 3000;
+//app.listen(port, () => console.log(`Server up and running on port ${port}`));
+app.listen(process.env.PORT || 3000, function() {
+  console.log(
+    "Express server listening on port %d in %s mode",
+    this.address().port,
+    app.settings.env
+  );
+});
