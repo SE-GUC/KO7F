@@ -1,10 +1,24 @@
 // The Question Model
-class Question {
-    constructor(quest, question_id, submit_user) {
-        this.quest = quest;
-        this.question_id = question_id;
-        this.submit_user = submit_user;
-    };
-}
+const mongoose=require('mongoose')
+const Schema=mongoose.Schema
+const QuestionSchema=new Schema
+({
+    quest:{
+        type=String,
+        required:[true, 'Question field is required']
+    },
+    question_id:{
+        type:Number,
+        required: [true, 'id is required']
+    },
+    sumbit_user:{
+        type: String,
+        required:[true, 'username required']
+
+    }
+
+})
+
+const Question = mongoose.model('question_table', QuestionSchema)
 
 module.exports = Question
