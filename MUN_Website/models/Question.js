@@ -1,4 +1,5 @@
 // The Question Model
+HEAD
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
 const QuestionSchema=new Schema
@@ -21,4 +22,5 @@ const QuestionSchema=new Schema
 
 const Question = mongoose.model('question_table', QuestionSchema)
 
-module.exports = Question
+
+module.exports = Question;
