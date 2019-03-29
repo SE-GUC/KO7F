@@ -21,9 +21,19 @@ router.post("/", async (req, res) => {
         .send({ error: isValidated.error.details[0].message });
     const newEvent = await Event.create(req.body);
     res.json({ msg: "Event was created successfully", data: newEvent });
-    res.send(newEvent);
   } catch (error) {
     console.log(error);
+  }
+});
+
+//As an Authorized User I should be able to fetch an Event
+router.get("/:id", async (req, res) => {
+  try {
+    const event = await Event.findOne({_id: req.params.id})
+    return res.send(event)
+  } catch (error) {
+    console.log(error);
+    return res.status(404).send({ error: "Event does not exist" });
   }
 });
 
