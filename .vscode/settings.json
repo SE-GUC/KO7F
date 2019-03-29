@@ -1,6 +1,7 @@
 {
   "files.exclude": {
     "node_modules": "explorerExcludedFiles",
-    "mun-website": "explorerExcludedFiles"
+    "mun-website": "explorerExcludedFiles",
+    ".vscode": "explorerExcludedFiles"
   }
 }
