@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const PortalLibrary = require("../../models/PortalLibrary");
-const validator = require("../../Validations/PortalLibraryValidations");
+const validator = require("../../validations/PortalLibraryValidations");
 
 //As an Authorized User I should be able to read the PortalLibrary
 router.get("/", async (req, res) => {

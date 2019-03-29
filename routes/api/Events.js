@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Event = require("../../models/Event");
-const validator = require("../../Validations/EventValidations");
+const validator = require("../../validations/EventValidations");
 
 //As an Authorized User and Non Authorized User I should be able to read Events
 router.get("/", async (req, res) => {
