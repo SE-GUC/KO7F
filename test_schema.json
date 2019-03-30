@@ -21,7 +21,7 @@
           }
         },
         "GET": {
-          "summary": "get list of all users",
+          "summary": "get list of all events",
           "expected": {
             "data": [
               {
@@ -70,6 +70,77 @@
         },
         "DELETE": {
           "summary": "delete a single event info",
+          "body": {},
+          "expected": {
+            "data": null
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/portal_libraries",
+      "params": {},
+      "methods": {
+        "POST": {
+          "summary": "create a new portalLibrary",
+          "body": {
+            "!title": "string().min(3).max(50).required()",
+            "!details": "string().min(3).required()"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!title": "string().min(3).max(50).required()",
+              "!details": "string().min(3).required()"
+            }
+          }
+        },
+        "GET": {
+          "summary": "get list of all portalLibraries",
+          "expected": {
+            "data": [
+              {
+                "!_id": "string().length(24)",
+                "!title": "string().min(3).max(50).required()",
+                "!details": "string().min(3).required()"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/portal_libraries/:id",
+      "params": {
+        "!id": "string().length(24)"
+      },
+      "methods": {
+        "GET": {
+          "summary": "get a single portalLibrary info",
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!title": "string().min(3).max(50).required()",
+              "!details": "string().min(3).required()"
+            }
+          }
+        },
+        "PUT": {
+          "summary": "update a single portalLibrary info",
+          "body": {
+            "!title": "string().min(3).max(50)",
+            "!details": "string().min(3)"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!title": "string().min(3).max(50).required()",
+              "!details": "string().min(3).required()"
+            }
+          }
+        },
+        "DELETE": {
+          "summary": "delete a single portalLibrary info",
           "body": {},
           "expected": {
             "data": null

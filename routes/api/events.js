@@ -110,4 +110,22 @@ router
     });
   });
 
+/*//As an Non Authorized User I should be able to rate Events
+router.put("/RateEvent/:id", (req, res) => {
+  const isEntered = EventsArr.some(
+    Event => Event.event_id === parseInt(req.params.id)
+  );
+  if (isEntered) {
+    const eventUpdated = req.body;
+    EventsArr.forEach(Event => {
+      if (Event.event_id === parseInt(req.params.id)) {
+        Event.rating = eventUpdated.rating ? eventUpdated.rating : Event.rating;
+        res.json({ msg: "You have successfully rated the Event", Event });
+      }
+    });
+  } else {
+    res.status(404).json({ msg: "Nothing have changed" });
+  }
+});*/
+
 module.exports = router;
