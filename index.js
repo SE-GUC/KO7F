@@ -1,5 +1,8 @@
+require("dotenv").config();
+const Logger = require("./routes/middlewares/Logger");
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 // Require Router Handlers
 const Events = require("./routes/api/events");
@@ -15,6 +18,12 @@ const AuthorizedUser = require("./routes/api/authorizedUser");
 //set up express
 const app = express();
 
+// middleware
+app.use((request, response, next) => {
+  Logger.log(`${request.method} => ${request.originalUrl}`);
+  next();
+});
+
 // DB Config
 const db = require("./config/keys").mongoURI;
 
@@ -27,6 +36,7 @@ mongoose
 // Init middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 //entry point
 app.get("/", (req, res) => {
@@ -35,31 +45,15 @@ app.get("/", (req, res) => {
     `);
 });
 
-//calling the methods on Questions class
+// handling subroutes
 app.use("/api/questions", Questions);
-
-//calling the methods on Announcement class
 app.use("/api/announcements", Announcement);
-
-//calling the methods on Accounts class
 app.use("/api/accounts", Accounts);
-
-//calling the methods on Timelines class
 app.use("/api/timelines", Timelines);
-
-//calling the methods on RegistrationForms class
 app.use("/api/registration_forms", RegistrationForms);
-
-//calling the methods on Events class
 app.use("/api/events", Events);
-
-//calling the methods on PortalLibraries class
 app.use("/api/portal_libraries", PortalLibraries);
-
-//calling the methods on UnauthorizedUser class
 app.use("/api/unauthorized_users", UnauthorizedUser);
-
-//calling the methods on authorized account
 app.use("/api/authorized_users", AuthorizedUser);
 
 // Handling 404

@@ -1,91 +1,113 @@
+const joi = require("joi");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
 const Event = require("../../models/Event");
-const validator = require("../../validations/EventValidations");
 
-//As an Authorized User and Non Authorized User I should be able to read Events
-router.get("/", async (req, res) => {
-  const Events = await Event.find();
-  res.json({ data: Events });
-});
+//= =---------------------------------------------------= =//
+//= =--- HANDLE events lists
+//= =---------------------------------------------------= =//
+router
+  .route("/")
+  .post(async (request, response) => {
+    const status = joi.validate(request.body, {
+      name: joi
+        .string()
+        .min(3)
+        .max(50)
+        .required(),
+      details: joi
+        .string()
+        .min(3)
+        .required(),
+      rating: joi
+        .number()
+        .min(1)
+        .max(5)
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
+    }
+    try {
+      const event = await new Event({
+        _id: mongoose.Types.ObjectId(),
+        name: request.body.name,
+        details: request.body.details,
+        rating: request.body.rating
+      }).save();
+      return response.json({ data: event });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't create a new event with the following data`
+      });
+    }
+  })
+  .get(async (request, response) => {
+    try {
+      const allEvents = await Event.find({}).exec();
+      return response.json({ data: allEvents });
+    } catch (err) {
+      return response.json({
+        error: `Error, Couldn't fetch the list of all events from the database`
+      });
+    }
+  });
+//= =---------------------------------------------------= =//
 
-//As an Authorized User I should be able to create Events
-router.post("/", async (req, res) => {
-  try {
-    const isValidated = validator.createValidation(req.body);
-    if (isValidated.error)
-      return res
-        .status(400)
-        .send({ error: isValidated.error.details[0].message });
-    const newEvent = await Event.create(req.body);
-    res.json({ msg: "Event was created successfully", data: newEvent });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-//As an Authorized User I should be able to fetch an Event
-router.get("/:id", async (req, res) => {
-  try {
-    const event = await Event.findOne({_id: req.params.id})
-    return res.send(event)
-  } catch (error) {
-    console.log(error);
-    return res.status(404).send({ error: "Event does not exist" });
-  }
-});
-
-//As an Authorized User I should be able to update Events
-router.put("/:id", async (req, res) => {
-  try {
-    const IsEvent = await Event.findOne(req.param.id);
-
-    if (!IsEvent)
-      return res.status(404).send({ error: "Event does not exist" });
-
-    const isValidated = validator.updateValidation(req.body);
-
-    if (isValidated.error)
-      return res
-        .status(400)
-        .send({ error: isValidated.error.details[0].message });
-
-    const updatedEvent = await Event.updateOne(req.body);
-    res.json({ msg: "Event updated successfully", data: updatedEvent });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-//As an Authorized User I should be able to delete Events
-router.delete("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const deletedEvent = await Event.findByIdAndRemove(id);
-    res.json({ msg: "Event was deleted successfully", data: deletedEvent });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-//As an Non Authorized User I should be able to rate Events
-router.put("/RateEvent/:id", (req, res) => {
-  const isEntered = EventsArr.some(
-    Event => Event.event_id === parseInt(req.params.id)
-  );
-  if (isEntered) {
-    const eventUpdated = req.body;
-    EventsArr.forEach(Event => {
-      if (Event.event_id === parseInt(req.params.id)) {
-        Event.rating = eventUpdated.rating ? eventUpdated.rating : Event.rating;
-        res.json({ msg: "You have successfully rated the Event", Event });
+//= =---------------------------------------------------= =//
+//= =--- HANDLE event detail
+//= =---------------------------------------------------= =//
+router
+  .route("/:id")
+  .all(async (request, response, next) => {
+    const status = joi.validate(request.params, {
+      id: joi
+        .string()
+        .length(24)
+        .required()
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
+    }
+    next();
+  })
+  .get(async (request, response) => {
+    try {
+      const event = await Event.findById(request.params.id).exec();
+      return response.json({ data: event });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't find an event given the following id`
+      });
+    }
+  })
+  .put((request, response) => {
+    Event.findByIdAndUpdate(
+      request.params.id,
+      request.body,
+      { new: true },
+      (err, model) => {
+        if (!err) {
+          return response.json({ data: model });
+        } else {
+          return response.json({
+            error: `Error, couldn't update an event given the following data`
+          });
+        }
+      }
+    );
+  })
+  .delete((request, response) => {
+    Event.findByIdAndDelete(request.params.id, (err, model) => {
+      if (!err) {
+        return response.json({ data: null });
+      } else {
+        return response.json({
+          error: `Error, couldn't delete an event given the following data`
+        });
       }
     });
-  } else {
-    res.status(404).json({ msg: "Nothing have changed" });
-  }
-});
+  });
 
 module.exports = router;

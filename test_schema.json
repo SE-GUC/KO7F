@@ -1,0 +1,81 @@
+{
+  "routes": [
+    {
+      "url": "/api/events",
+      "params": {},
+      "methods": {
+        "POST": {
+          "summary": "create a new event",
+          "body": {
+            "!name": "string().min(3).max(50).required()",
+            "!details": "string().min(3).required()",
+            "!rating": "number().min(1).max(5)"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!details": "string().min(3).required()",
+              "!rating": "number().min(1).max(5)"
+            }
+          }
+        },
+        "GET": {
+          "summary": "get list of all users",
+          "expected": {
+            "data": [
+              {
+                "!_id": "string().length(24)",
+                "!name": "string().min(3).max(50).required()",
+                "!details": "string().min(3).required()",
+                "!rating": "number().min(1).max(5)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/events/:id",
+      "params": {
+        "!id": "string().length(24)"
+      },
+      "methods": {
+        "GET": {
+          "summary": "get a single event info",
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!details": "string().min(3).required()",
+              "!rating": "number().min(1).max(5)"
+            }
+          }
+        },
+        "PUT": {
+          "summary": "update a single event info",
+          "body": {
+            "!name": "string().min(3).max(50)",
+            "!details": "string().min(3)",
+            "!rating": "number().min(1).max(5)"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!details": "string().min(3).required()",
+              "!rating": "number().min(1).max(5)"
+            }
+          }
+        },
+        "DELETE": {
+          "summary": "delete a single event info",
+          "body": {},
+          "expected": {
+            "data": null
+          }
+        }
+      }
+    }
+  ]
+}
