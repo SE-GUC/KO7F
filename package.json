@@ -6,13 +6,17 @@
   "scripts": {
     "start": "node index",
     "dev": "NODE_ENV=dev nodemon index",
-    "test": "jest"
+    "test": "concurrently \"node index.js\" \"jest --detectOpenHandles test.js\"",
+    "gen": "concurrently \"node index.js\" \"node generate.js\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
     "config": "^3.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "heroku": "^7.22.7",
     "joi": "^14.3.1",
