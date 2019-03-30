@@ -29,7 +29,7 @@ router.post("/Register", (req, res) => {
 });
 
 // it posts the whole Registration Form
-router.postinfo('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
       if (!req.session.user_id) return res.json({ msg: 'You are not logged in' })
   

@@ -1,11 +1,10 @@
 // The Question Model
-HEAD
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
 const QuestionSchema=new Schema
 ({
     quest:{
-        type=String,
+        type:String,
         required:[true, 'Question field is required']
     },
     question_id:{
