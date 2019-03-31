@@ -12,7 +12,7 @@ const QuestionSchema= new Schema
         type:Number,
         required: [true, 'id is required']
     },
-    sumbit_user:{
+    submit_user:{
         type: String,
         required:[true, 'username required']
 

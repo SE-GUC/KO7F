@@ -63,9 +63,11 @@ const generateAll = async () => {
     title: "Sokna",
     details: "from 12-5-2019 to 20-5-2019"
   });
+
+
   const createQuestion = async requestBody => {
     return new Promise(async (resolve, reject) => {
-      const response = await nfetch(`http://localhost:${PORT}/api/events/`, {
+      const response = await nfetch(`http://localhost:${PORT}/api/questions/`, {
         method: "POST",
         body: JSON.stringify(requestBody),
         headers: { "Content-Type": "application/json" }
