@@ -26,7 +26,7 @@ router
         .string()
         .min(3)
         .max(50)
-        .required
+        .required(),
     });
     if (status.error) {
       return response.json({ error: status.error.details[0].message });

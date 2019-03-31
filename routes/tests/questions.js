@@ -48,7 +48,7 @@ class QuestionsTest extends AbstractTests {
       submit_user: "omar"
     };
 
-    test(`Randomly creating a new question,\t\t[=> POST\t${
+     test(`Randomly creating a new question,\t\t[=> POST\t${
       this.base_url
     }\t`, async () => {
       const response = await nfetch(`${this.base_url}`, {
