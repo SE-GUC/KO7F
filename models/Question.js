@@ -2,7 +2,7 @@
 // The Question Model
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
-const QuestionSchema=new Schema
+const QuestionSchema= new Schema
 ({
     quest:{
         type:String,
@@ -18,7 +18,7 @@ const QuestionSchema=new Schema
 
     }
 
-})
+});
 
-const Question = mongoose.model('question_table', QuestionSchema)
-
+const question = mongoose.model('Question_DB', QuestionSchema)
+module.exports = question;

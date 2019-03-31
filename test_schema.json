@@ -146,7 +146,87 @@
             "data": null
           }
         }
+      
+      }
+    
+    },
+    {
+      "url": "/api/questions",
+      "params": {},
+      "methods": {
+        "POST": {
+          "summary": "create a new question",
+          "body": {
+            "!quest": "string().min(10).max(1000).required()",
+            "!question_id": "number().min(3).required()",
+            "!submit_user": "string().min(3).max(50)"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!quest": "string().min(10).max(1000).required()",
+              "!question_id": "number().min(3).required()",
+              "!submit_user": "string().min(3).max(50)"
+            }
+          }
+        },
+        "GET": {
+          "summary": "get list of all questions",
+          "expected": {
+            "data": [
+              {
+                "!_id": "string().length(24)",
+                "!quest": "string().min(10).max(1000).required()",
+                "!question_id": "number().min(3).required()",
+                "!submit_user": "string().min(3).max(50)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/questions/:id",
+      "params": {
+        "!id": "string().length(24)"
+      },
+      "methods": {
+        "GET": {
+          "summary": "get a single question",
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!quest": "string().min(10).max(1000).required()",
+              "!question_id": "number().min(3).required()",
+              "!submit_user": "string().min(3).max(50)"
+            }
+          }
+        },
+        "PUT": {
+          "summary": "update a single question ",
+          "body": {
+            "!quest": "string().min(10).max(1000).required()",
+            "!question_id": "number().min(3).required()",
+            "!submit_user": "string().min(3).max(50)"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!quest": "string().min(10).max(1000).required()",
+              "!question_id": "number().min(3).required()",
+              "!submit_user": "string().min(3).max(50)"
+            }
+          }
+        },
+        "DELETE": {
+          "summary": "delete a single question",
+          "body": {},
+          "expected": {
+            "data": null
+          }
+        }
       }
     }
+    
   ]
 }

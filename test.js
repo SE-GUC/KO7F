@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const EventsTest = require("./routes/tests/events");
 const PortalLibrariesTest = require("./routes/tests/portalLibraries");
+const QuestionsTest= require("./routes/tests/questions");
 
 const PORT = 3000;
 
@@ -32,16 +33,19 @@ afterAll(async () => {
 //= =---------------------------------------------------= =//
 const eventsTests = new EventsTest(PORT, "/events");
 const portalLibrariesTests = new PortalLibrariesTest(PORT, "/portal_libraries");
+const questionsTests= new QuestionsTest(PORT, "/questions");
 
 describe("Let me first run the independent tests", () => {
   Promise.all([
     eventsTests.runIndependently(),
-    portalLibrariesTests.runIndependently()
+    portalLibrariesTests.runIndependently(),
+    questionsTests.runIndependently()
   ]).then(result => {
     describe("Now running the dependent tests", () => {
       Promise.all([
         eventsTests.runDependently().then(_ => {}),
-        portalLibrariesTests.runDependently().then(_ => {})
+        portalLibrariesTests.runDependently().then(_ => {}),
+        questionsTests.runDependently().then(_ => {})
       ]).then(result => {});
     });
   });
