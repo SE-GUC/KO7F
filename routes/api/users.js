@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const user = require("../../models/User");
+const User = require("../../models/User");
 
 //= =---------------------------------------------------= =//
 //= =--- HANDLE users lists
@@ -39,7 +39,7 @@ router
       return response.json({ error: status.error.details[0].message });
     }
     try {
-      const user = await new user({
+      const user = await new User({
         _id: mongoose.Types.ObjectId(),
         name: request.body.name,
         password: request.body.password,
@@ -56,7 +56,7 @@ router
   })
   .get(async (request, response) => {
     try {
-      const allUsers = await user.find({}).exec();
+      const allUsers = await User.find({}).exec();
       return response.json({ data: allUsers });
     } catch (err) {
       return response.json({
@@ -85,7 +85,7 @@ router
   })
   .get(async (request, response) => {
     try {
-      const user = await user.findById(request.params.id).exec();
+      const user = await User.findById(request.params.id).exec();
       return response.json({ data: user });
     } catch (err) {
       return response.json({
@@ -94,7 +94,7 @@ router
     }
   })
   .put((request, response) => {
-    user.findByIdAndUpdate(
+    User.findByIdAndUpdate(
       request.params.id,
       request.body,
       { new: true },
@@ -110,7 +110,7 @@ router
     );
   })
   .delete((request, response) => {
-    user.findByIdAndDelete(request.params.id, (err, model) => {
+    User.findByIdAndDelete(request.params.id, (err, model) => {
       if (!err) {
         return response.json({ data: null });
       } else {

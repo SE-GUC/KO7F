@@ -1,6 +1,6 @@
 const nfetch = require("node-fetch");
 const AbstractTests = require("./AbstractTests");
-const user = require("../../models/User");
+const User = require("../../models/User");
 
 class Userstest extends AbstractTests {
   constructor(PORT, ROUTE) {
@@ -50,7 +50,7 @@ class Userstest extends AbstractTests {
       name: "ahmed",
       password: "12345",
       age: 5,
-      major: "BI",
+      major: "Bussiness Informatics",
       admin: true
 
     };
@@ -69,12 +69,13 @@ class Userstest extends AbstractTests {
       expect(Object.keys(jsonResponse)).toEqual(["data"]);
 
       // go check in the mongo database
-      const user = await user.findOne(requestBody).exec();
+      const user = await User.findOne(requestBody).exec();
       expect(user).toMatchObject(requestBody);
       this.sharedState.id = user._id;
       this.sharedState.name = user.name;
       this.sharedState.password = user.password;
       this.sharedState.age = user.age;
+      this.sharedState.major = user.major;
       this.sharedState.admin=user.admin
       
     });
@@ -123,7 +124,7 @@ class Userstest extends AbstractTests {
       const jsonResponse = await response.json();
       expect(Object.keys(jsonResponse)).toEqual(["data"]);
 
-      const user = await user.findOne(requestBody).exec();
+      const user = await User.findOne(requestBody).exec();
       expect(jsonResponse.data.name).toEqual(user.name);
       expect(jsonResponse.data.password).toEqual(user.password);
       expect(jsonResponse.data.age).toEqual(user.age);
@@ -154,7 +155,7 @@ class Userstest extends AbstractTests {
       const jsonResponse = await response.json();
       expect(Object.keys(jsonResponse)).toEqual(["data"]);
 
-      const checkuser = await user.findOne({
+      const checkuser = await User.findOne({
         _id: this.sharedState.id
       }).exec();
       expect(checkuser).toEqual(null);
