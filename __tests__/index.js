@@ -1,23 +1,14 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-<<<<<<< Updated upstream:__tests__/index.js
 const EventsTest = require("./scenarios/events");
 const PortalLibrariesTest = require("./scenarios/portalLibraries");
-=======
-const EventsTest = require("./routes/tests/events");
-const Userstest = require ("./routes/tests/users");
-const PortalLibrariesTest = require("./routes/tests/portalLibraries");
->>>>>>> Stashed changes:test.js
+const UsersTest = require("./scenarios/users");
 
 const PORT = 3000;
 
 // mongo config
-<<<<<<< Updated upstream:__tests__/index.js
 const db = require("../config/keys").mongoURI;
-=======
-const db = require("./config/keys").mongoURI;
->>>>>>> Stashed changes:test.js
 
 // Connect to mongo
 mongoose
@@ -38,7 +29,7 @@ beforeAll(async () => {
 // ---== Core tests
 //= =---------------------------------------------------= =//
 const eventsTests = new EventsTest(PORT, "/events");
-const usersTests = new Userstest(PORT, "/users");
+const usersTests = new UsersTest(PORT, "/users");
 const portalLibrariesTests = new PortalLibrariesTest(PORT, "/portal_libraries");
 
 describe("Let me first run the independent tests", () => {
