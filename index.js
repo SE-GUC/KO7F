@@ -1,5 +1,5 @@
 require("dotenv").config();
-const Logger = require("./routes/middlewares/Logger");
+const Logger = require("./middlewares/Logger");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");

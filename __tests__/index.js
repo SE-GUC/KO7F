@@ -1,13 +1,13 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const EventsTest = require("./routes/tests/events");
-const PortalLibrariesTest = require("./routes/tests/portalLibraries");
+const EventsTest = require("./scenarios/events");
+const PortalLibrariesTest = require("./scenarios/portalLibraries");
 
 const PORT = 3000;
 
 // mongo config
-const db = require("./config/Keys_Dev").mongoURI;
+const db = require("../config/keys").mongoURI;
 
 // Connect to mongo
 mongoose
@@ -22,9 +22,6 @@ beforeAll(async () => {
   await mongoose.connection.dropDatabase();
 });
 
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-});
 //= =---------------------------------------------------= =//
 
 //= =---------------------------------------------------= =//
