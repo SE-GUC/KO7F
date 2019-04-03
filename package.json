@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "dev": "nodemon index",
-    "test": "concurrently \"node index.js\" \"jest --detectOpenHandles ./__tests__/index.js\"",
+    "test": "concurrently \"node index.js\" \"jest --detectOpenHandles test.js\"",
     "gen": "concurrently \"node index.js\" \"node generate.js\""
   },
   "author": "",

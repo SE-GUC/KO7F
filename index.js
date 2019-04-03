@@ -9,11 +9,9 @@ const Events = require("./routes/api/events");
 const PortalLibraries = require("./routes/api/portalLibraries");
 const RegistrationForms = require("./routes/api/registrationForms");
 const Timelines = require("./routes/api/timelines");
-const UnauthorizedUser = require("./routes/api/unauthorizedUser");
-const Accounts = require("./routes/api/accounts");
 const Announcement = require("./routes/api/announcement");
 const Questions = require("./routes/api/questions");
-const AuthorizedUser = require("./routes/api/authorizedUser");
+const Users = require("./routes/api/users");
 
 //set up express
 const app = express();
@@ -48,13 +46,11 @@ app.get("/", (req, res) => {
 // handling subroutes
 app.use("/api/questions", Questions);
 app.use("/api/announcements", Announcement);
-app.use("/api/accounts", Accounts);
 app.use("/api/timelines", Timelines);
 app.use("/api/registration_forms", RegistrationForms);
 app.use("/api/events", Events);
 app.use("/api/portal_libraries", PortalLibraries);
-app.use("/api/unauthorized_users", UnauthorizedUser);
-app.use("/api/authorized_users", AuthorizedUser);
+app.use("/api/users", Users);
 
 // Handling 404
 app.use((req, res) => {
