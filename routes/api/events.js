@@ -2,7 +2,7 @@ const joi = require("joi");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const eventuserrating= require('../../models/usereventrating')
+const userEventRating= require('../../models/UserEventRating')
 const Event = require("../../models/Event");
 
 //= =---------------------------------------------------= =//
@@ -122,15 +122,15 @@ router
           {
               if (Event.event_id===parseInt(req.params.id))
               {
-                  eventuserrating.userid= userid
-                  eventuserrating.eventid= req.params.id
-                  eventuserrating.rating=eventUpdate
+                  userEventRating.userid= userid
+                  userEventRating.eventid= req.params.id
+                  userEventRating.rating=eventUpdate
                   res.json({msg: 'You have successfully rated the Event', Event});
                   let sum=0
-                  for(let i=0;i<eventuserrating.length;i++){
-                      sum= sum+ eventuserrating.rating
+                  for(let i=0;i<userEventRating.length;i++){
+                      sum= sum+ userEventRating.rating
                   }
-                  eventuserrating.rating=sum/eventuserrating.length
+                  userEventRating.rating=sum/userEventRating.length
               }
           })
   //    }
