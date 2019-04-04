@@ -1,5 +1,5 @@
 const nfetch = require("node-fetch");
-const AbstractTests = require("./AbstractTests");
+const AbstractTests = require("./scenarios/AbstractTests");
 const Question = require("../../models/Question");
 
 class QuestionsTest extends AbstractTests {

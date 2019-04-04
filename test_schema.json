@@ -77,6 +77,7 @@
         }
       }
     },
+    
     {
       "url": "/api/portal_libraries",
       "params": {},
@@ -226,7 +227,102 @@
           }
         }
       }
-    }
+    },
+    {
     
+      "url": "/api/user",
+      "params": {},
+      "methods": {
+        "POST": {
+          "summary": "create a new user",
+          "body": {
+            "!name": "string().min(3).max(50).required()",
+            "!password": "string().min(3).required()",
+            "!age": "number().min(1).max(5)",
+            "!major": "string().min(3).max(50).required()",
+            "!admin": "boolean().required()"
+
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!password": "string().min(3).required()",
+              "!age": "number().min(1).max(5)",
+              "!major": "string().min(3).max(50).required()",
+              "!admin": "boolean().required()"
+            }
+          }
+        },
+        "GET": {
+          "summary": "get list of all users",
+          "expected": {
+            "data": [
+              {
+                "!_id": "string().length(24)",
+                "!name": "string().min(3).max(50).required()",
+                "!password": "string().min(3).required()",
+                "!age": "number().min(1).max(5)",
+                "!major": "string().min(3).max(50).required()",
+                "!admin": "boolean().required()"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/user/:id",
+      "params": {
+        "!id": "string().length(24)"
+      },
+      "methods": {
+        "GET": {
+          "summary": "get a single user info",
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!password": "string().min(3).required()",
+              "!age": "number().min(1).max(5)",
+              "!major": "string().min(3).max(50).required()",
+              "!admin": "boolean().required()"
+            }
+          }
+        },
+        "PUT": {
+          "summary": "update a single user info",
+          "body": {
+            "!name": "string().min(3).max(50).required()",
+            "!password": "string().min(3).required()",
+            "!age": "number().min(1).max(5)",
+            "!major": "string().min(3).max(50).required()",
+            "!admin": "boolean().required()"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!password": "string().min(3).required()",
+              "!age": "number().min(1).max(5)",
+              "!major": "string().min(3).max(50).required()",
+              "!admin": "boolean().required()"
+            }
+          }
+        },
+        "DELETE": {
+          "summary": "delete a single user info",
+          "body": {},
+          "expected": {
+            "data": null
+          }
+        }
+      }
+    }
+<<<<<<< HEAD
+    
+=======
+  
+>>>>>>> 338e1b6b3218c74bb55151c4605ee0652c1903fb
   ]
 }
