@@ -1,11 +1,9 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const EventsTest = require("./routes/tests/events");
-const PortalLibrariesTest = require("./routes/tests/portalLibraries");
-const QuestionsTest= require("./scenarios/questions");
 const EventsTest = require("./scenarios/events");
 const PortalLibrariesTest = require("./scenarios/portalLibraries");
+const QuestionsTest= require("./scenarios/questions");
 const UsersTest = require("./scenarios/users");
 
 const PORT = 3000;
