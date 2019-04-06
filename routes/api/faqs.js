@@ -1,92 +1,107 @@
-const express = require('express')
+const joi = require("joi");
+const express = require("express");
 const router = express.Router();
-
-const FAQs = require('../../models/FAQs')
-
-const FAQsArr =
-[
-  new FAQs=(1,'am i supposed to fail this course'),
-  new FAQs=(2,'ko7f')
-
-
-];
-//As an Authorized User I should be able to read FAQs
-router.get('/FAQs', (req, res) => res.json({ data : FAQsArr }))
-//As an unAuthorized User I should be able to create FAQs
-router.post('/CreateFAQs', (req, res) =>
-{
-    const FAQs_id=req.body.FAQs_id;
-    const reply = req.body.reply;
-    const content=req.body.content;
-    
-    if (!FAQs_id || typeof FAQs_id !== 'number') 
-        return res.status(404).send({err:'You must enter the Event ID and as an integer'});
-    if (reply) 
-        return res.send({err: 'you are unauthorized to respond to FAQs'});
-    if (!content) 
-        return res.status(404).send({err: 'You must enter content'});
-
-    const Created_FAQs = 
-    {
-        FAQs_id,
-        reply,
-        content,
-        id: uuid.v4(),
-    };
-
-    EventsArr.push(Created_FAQs)
-    res.send(FAQsArr)
-});
-//As an Authorized User I should be able to respond to FAQs or update FAQs
-router.put('/UpdateFAQs/:id',(req,res) => 
-{
-    const isEntered = FAQsArr.some(FAQs => FAQs.FAQs_id===parseInt(req.params.id));
-    if(isEntered)
-    {
-        const FAQsUpdated=req.body;
-        FAQsArr.forEach(FAQs => 
-        {
-            if (FAQs.FAQs_id===parseInt(req.params.id))
-            {
-                FAQs.reply=FAQsUpdated.reply?FAQsUpdated.reply:FAQs.reply;
-                FAQs.content=FAQsUpdated.content?FAQsUpdated.content:FAQs.content;
-                res.json({msg: 'The FAQs are updated successfully', FAQs});
-            }
-        })
+const mongoose = require("mongoose");
+const FAQs = require("../../models/faqs");
+//= =---------------------------------------------------= =//
+//= =--- HANDLE FAQs lists
+//= =---------------------------------------------------= =//
+router
+  .route("/")
+  .post(async (request, response) => {
+    const status = joi.validate(request.body, {
+      reply: joi
+        .string()
+        .min(3)
+        .max(100)
+        .required(),
+      content: joi
+        .string()
+        .min(3)
+        .max(200)
+        .required()
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
     }
-    else
-    {
-      res.status(404).json({msg: 'Nothing have changed'})  
+    try {
+      const faqs = await new FAQs({
+        _id: mongoose.Types.ObjectId(),
+        reply: request.body.reply,
+        content: request.body.content
+      }).save();
+      return response.json({ data: faqs });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't create a new faqs with the following data`
+      });
     }
-});
-//As an admin User I should be able to delete FAQs (will be impplemented in:front end)
-router.delete('/DeleteFAQs/:id',(req,res) => 
-{    
-    
-    const isEntered = FAQsArr.some(FAQs => FAQs.FAQs_id===parseInt(req.params.id));
-    if(isEntered)
-    {
-        FAQsArr.forEach(FAQs => 
-        {
-            if (FAQs.FAQs_id===parseInt(req.params.id))
-            { 
-                delete FAQs.FAQs_id;
-                delete FAQs.reply;
-                delete FAQs.content;
-                delete FAQs.id;
-                res.json({msg:'The FAQs is deleted successfully', FAQsArr});
-            }
-        })
+  })
+  .get(async (request, response) => {
+    try {
+      const allFAQs = await FAQs.find({}).exec();
+      return response.json({ data: allFAQs });
+    } catch (err) {
+      return response.json({
+        error: `Error, Couldn't fetch the list of all FAQs from the database`
+      });
     }
-    else
-    {
-      res.status(404).json({msg: 'Error on deleting the FAQs'})  
+  });
+//= =---------------------------------------------------= =//
+
+//= =---------------------------------------------------= =//
+//= =--- HANDLE FAQs detail
+//= =---------------------------------------------------= =//
+router
+  .route("/:id")
+  .all(async (request, response, next) => {
+    const status = joi.validate(request.params, {
+      id: joi
+        .string()
+        .length(24)
+        .required()
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
     }
-});
+    next();
+  })
+  .get(async (request, response) => {
+    try {
+      const faqs = await FAQs.findById(request.params.id).exec();
+      return response.json({ data: faqs });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't find an faqs given the following id`
+      });
+    }
+  })
+  .put((request, response) => {
+    FAQs.findByIdAndUpdate(
+      request.params.id,
+      request.body,
+      { new: true },
+      (err, model) => {
+        if (!err) {
+          return response.json({ data: model });
+        } else {
+          return response.json({
+            error: `Error, couldn't update an faqs given the following data`
+          });
+        }
+      }
+    );
+  })
+  .delete((request, response) => {
+    FAQs.findByIdAndDelete(request.params.id, (err, model) => {
+      if (!err) {
+        return response.json({ data: null });
+      } else {
+        return response.json({
+          error: `Error, couldn't delete an faqs given the following data`
+        });
+      }
+    });
+  });
 
-module.exports = router
-
-
-  
-
-
+module.exports = router;
