@@ -8,8 +8,7 @@ const PORT = 3000;
 const db = require("./config/keys").mongoURI;
 
 // Connect to mongo
-const connectToMongo = () => mongoose
-    .connect(db, { useNewUrlParser: true })
+const connectToMongo = () => mongoose.connect(db, { useNewUrlParser: true });
 
 // Clean database first
 const dropMongo = () => mongoose.connection.dropDatabase();
@@ -49,12 +48,27 @@ const createPortalLibrary = async requestBody => {
   });
 };
 
-const generateAll = async () => {
+const createFAQ = requestBody => {
+  return new Promise(async (resolve, reject) => {
+    const response = await nfetch(`http://localhost:${PORT}/api/faqs/`, {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: { "Content-Type": "application/json" }
+    });
+    const jsonResponse = await response.json();
+    if ("data" in jsonResponse) {
+      resolve(jsonResponse.data);
+    } else {
+      reject(jsonResponse.error);
+    }
+  });
+};
 
+const generateAll = async () => {
   connectToMongo()
     .then(() => console.log("Connected to MongoDB"))
     .catch(err => console.log(err));
-  await dropMongo()
+  await dropMongo();
   await createEvent({
     name: "Sokna",
     details: "from 12-5-2019 to 20-5-2019"
@@ -63,7 +77,6 @@ const generateAll = async () => {
     title: "Sokna",
     details: "from 12-5-2019 to 20-5-2019"
   });
-
 
   const createQuestion = async requestBody => {
     return new Promise(async (resolve, reject) => {
@@ -88,5 +101,10 @@ const generateAll = async () => {
   });
   
 }
+  await createFAQ({
+    reply: "hello",
+    content: "where?"
+  });
+};
 
 generateAll();
