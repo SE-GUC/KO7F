@@ -2,55 +2,72 @@ const joi = require("joi");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const FAQs = require("../../models/faqs");
+
+const User = require("../../models/User");
+
 //= =---------------------------------------------------= =//
-//= =--- HANDLE FAQs lists
+//= =--- HANDLE users lists
 //= =---------------------------------------------------= =//
 router
   .route("/")
   .post(async (request, response) => {
     const status = joi.validate(request.body, {
-      reply: joi
+      name: joi
         .string()
         .min(3)
-        .max(100)
+        .max(50)
         .required(),
-      content: joi
+      password: joi
         .string()
         .min(3)
-        .max(200)
+        .required(),
+      age: joi
+        .number()
+        .min(1)
+        .max(5),
+      major: joi
+        .string()
+        .min(3)
+        .max(50),
+      admin : joi
+        .boolean()
         .required()
+
+
     });
     if (status.error) {
       return response.json({ error: status.error.details[0].message });
     }
     try {
-      const faqs = await new FAQs({
+      const user = await new User({
         _id: mongoose.Types.ObjectId(),
-        reply: request.body.reply,
-        content: request.body.content
+        name: request.body.name,
+        password: request.body.password,
+        age: request.body.age,
+        major: request.body.major,
+        admin: request.body.admin
       }).save();
-      return response.json({ data: faqs });
+      return response.json({ data: user });
     } catch (err) {
       return response.json({
-        error: `Error, couldn't create a new faqs with the following data`
+        error: `Error, couldn't create a new user with the following data`
       });
     }
   })
   .get(async (request, response) => {
     try {
-      const allFAQs = await FAQs.find({}).exec();
-      return response.json({ data: allFAQs });
+      const allUsers = await User.find({}).exec();
+      return response.json({ data: allUsers });
     } catch (err) {
       return response.json({
-        error: `Error, Couldn't fetch the list of all FAQs from the database`
+        error: `Error, Couldn't fetch the list of all users from the database`
       });
     }
   });
 //= =---------------------------------------------------= =//
 
 //= =---------------------------------------------------= =//
-//= =--- HANDLE FAQs detail
+//= =--- HANDLE users detail
 //= =---------------------------------------------------= =//
 router
   .route("/:id")
@@ -68,16 +85,16 @@ router
   })
   .get(async (request, response) => {
     try {
-      const faqs = await FAQs.findById(request.params.id).exec();
-      return response.json({ data: faqs });
+      const user = await User.findById(request.params.id).exec();
+      return response.json({ data: user });
     } catch (err) {
       return response.json({
-        error: `Error, couldn't find an faqs given the following id`
+        error: `Error, couldn't find an user given the following id`
       });
     }
   })
   .put((request, response) => {
-    FAQs.findByIdAndUpdate(
+    User.findByIdAndUpdate(
       request.params.id,
       request.body,
       { new: true },
@@ -86,22 +103,24 @@ router
           return response.json({ data: model });
         } else {
           return response.json({
-            error: `Error, couldn't update an faqs given the following data`
+            error: `Error, couldn't update an user given the following data`
           });
         }
       }
     );
   })
   .delete((request, response) => {
-    FAQs.findByIdAndDelete(request.params.id, (err, model) => {
+    User.findByIdAndDelete(request.params.id, (err, model) => {
       if (!err) {
         return response.json({ data: null });
       } else {
         return response.json({
-          error: `Error, couldn't delete an faqs given the following data`
+          error: `Error, couldn't delete an user given the following data`
         });
       }
     });
   });
+
+
 
 module.exports = router;

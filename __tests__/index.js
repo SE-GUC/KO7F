@@ -1,13 +1,15 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const EventsTest = require("./routes/tests/events");
-const PortalLibrariesTest = require("./routes/tests/portalLibraries");
+const EventsTest = require("./scenarios/events");
+const PortalLibrariesTest = require("./scenarios/portalLibraries");
+const UsersTest = require("./scenarios/users");
+const FAQsTest = require("./scenarios/faqs");
 
 const PORT = 3000;
 
 // mongo config
-const db = require("./config/Keys_Dev").mongoURI;
+const db = require("../config/keys").mongoURI;
 
 // Connect to mongo
 mongoose
@@ -22,26 +24,29 @@ beforeAll(async () => {
   await mongoose.connection.dropDatabase();
 });
 
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-});
 //= =---------------------------------------------------= =//
 
 //= =---------------------------------------------------= =//
 // ---== Core tests
 //= =---------------------------------------------------= =//
 const eventsTests = new EventsTest(PORT, "/events");
+const usersTests = new UsersTest(PORT, "/users");
 const portalLibrariesTests = new PortalLibrariesTest(PORT, "/portal_libraries");
+const faqsTest = new FAQsTest(PORT, "/faqs");
 
 describe("Let me first run the independent tests", () => {
   Promise.all([
     eventsTests.runIndependently(),
-    portalLibrariesTests.runIndependently()
+    usersTests.runIndependently(),
+    portalLibrariesTests.runIndependently(),
+    faqsTest.runIndependently()
   ]).then(result => {
     describe("Now running the dependent tests", () => {
       Promise.all([
         eventsTests.runDependently().then(_ => {}),
-        portalLibrariesTests.runDependently().then(_ => {})
+        usersTests.runDependently().then(_ => {}),
+        portalLibrariesTests.runDependently().then(_ => {}),
+        faqsTest.runDependently().then(_ => {})
       ]).then(result => {});
     });
   });

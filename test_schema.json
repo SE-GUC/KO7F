@@ -77,6 +77,7 @@
         }
       }
     },
+
     {
       "url": "/api/portal_libraries",
       "params": {},
@@ -141,6 +142,166 @@
         },
         "DELETE": {
           "summary": "delete a single portalLibrary info",
+          "body": {},
+          "expected": {
+            "data": null
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/user",
+      "params": {},
+      "methods": {
+        "POST": {
+          "summary": "create a new user",
+          "body": {
+            "!name": "string().min(3).max(50).required()",
+            "!password": "string().min(3).required()",
+            "!age": "number().min(1).max(5)",
+            "!major": "string().min(3).max(50).required()",
+            "!admin": "boolean().required()"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!password": "string().min(3).required()",
+              "!age": "number().min(1).max(5)",
+              "!major": "string().min(3).max(50).required()",
+              "!admin": "boolean().required()"
+            }
+          }
+        },
+        "GET": {
+          "summary": "get list of all users",
+          "expected": {
+            "data": [
+              {
+                "!_id": "string().length(24)",
+                "!name": "string().min(3).max(50).required()",
+                "!password": "string().min(3).required()",
+                "!age": "number().min(1).max(5)",
+                "!major": "string().min(3).max(50).required()",
+                "!admin": "boolean().required()"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/user/:id",
+      "params": {
+        "!id": "string().length(24)"
+      },
+      "methods": {
+        "GET": {
+          "summary": "get a single user info",
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!password": "string().min(3).required()",
+              "!age": "number().min(1).max(5)",
+              "!major": "string().min(3).max(50).required()",
+              "!admin": "boolean().required()"
+            }
+          }
+        },
+        "PUT": {
+          "summary": "update a single user info",
+          "body": {
+            "!name": "string().min(3).max(50).required()",
+            "!password": "string().min(3).required()",
+            "!age": "number().min(1).max(5)",
+            "!major": "string().min(3).max(50).required()",
+            "!admin": "boolean().required()"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!name": "string().min(3).max(50).required()",
+              "!password": "string().min(3).required()",
+              "!age": "number().min(1).max(5)",
+              "!major": "string().min(3).max(50).required()",
+              "!admin": "boolean().required()"
+            }
+          }
+        },
+        "DELETE": {
+          "summary": "delete a single user info",
+          "body": {},
+          "expected": {
+            "data": null
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/faqs",
+      "params": {},
+      "methods": {
+        "POST": {
+          "summary": "create a new faqs",
+          "body": {
+            "!reply": "string().min(3).max(100).required()",
+            "!content": "string().min(3).max(200).required()"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!reply": "string().min(3).max(100).required()",
+              "!content": "string().min(3).max(200).required()"
+            }
+          }
+        },
+        "GET": {
+          "summary": "get list of all faqs",
+          "expected": {
+            "data": [
+              {
+                "!_id": "string().length(24)",
+                "!reply": "string().min(3).max(100).required()",
+                "!content": "string().min(3).max(200).required()"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/faqs/:id",
+      "params": {
+        "!id": "string().length(24)"
+      },
+      "methods": {
+        "GET": {
+          "summary": "get a single faqs info",
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!reply": "string().min(3).max(100).required()",
+              "!content": "string().min(3).max(200).required()"
+            }
+          }
+        },
+        "PUT": {
+          "summary": "update a single faq info",
+          "body": {
+            "!reply": "string().min(3).max(100).required()",
+            "!content": "string().min(3).max(200).required()"
+          },
+          "expected": {
+            "data": {
+              "!_id": "string().length(24)",
+              "!reply": "string().min(3).max(100).required()",
+              "!content": "string().min(3).max(200).required()"
+            }
+          }
+        },
+        "DELETE": {
+          "summary": "delete a single faq info",
           "body": {},
           "expected": {
             "data": null
