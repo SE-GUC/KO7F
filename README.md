@@ -1,2 +1,2 @@
 # KO7F
-heroku link: https://mun-website.herokuapp.com/
+our react app is in the folder >>> munwebsite-app
