@@ -5,7 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 //import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import FAQS from './FAQS'
+//import FAQS from './FAQS'
 
 const options = ["Home", "Events", "FAQS"];
 
@@ -42,9 +42,8 @@ class OpenMenu extends React.Component {
         return <Redirect to="/events" />;
       } else if (this.state.clickedEntity === "Home") {
         return <Redirect to="/" />;
-      }
-      else if (this.state.clickedEntity === "FAQS") {
-        return <FAQS/>
+      } else if (this.state.clickedEntity === "FAQS") {
+        return <Redirect to="/faqs" />;
       }
       this.setState({ redirect: false });
       this.setState({ clickedEntity: null });

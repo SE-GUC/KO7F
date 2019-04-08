@@ -14,6 +14,10 @@ const EventSchema = new Schema({
   rating: {
     type: Number,
     required: false
+  },
+  event_date: {
+    type: Date,
+    required: [true, "Date field is required"]
   }
 });
 

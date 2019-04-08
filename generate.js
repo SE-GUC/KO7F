@@ -89,7 +89,8 @@ const generateAll = async () => {
 
   await createEvent({
     name: "Sokna",
-    details: "from 12-5-2019 to 20-5-2019"
+    details: "from 12-5-2019 to 20-5-2019",
+    event_date: "2019-05-12"
   });
 
   await createPortalLibrary({
