@@ -5,8 +5,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 //import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
+import FAQS from './FAQS'
 
-const options = ["Home", "Events"];
+const options = ["Home", "Events", "FAQS"];
 
 const ITEM_HEIGHT = 48;
 
@@ -41,6 +42,9 @@ class OpenMenu extends React.Component {
         return <Redirect to="/events" />;
       } else if (this.state.clickedEntity === "Home") {
         return <Redirect to="/" />;
+      }
+      else if (this.state.clickedEntity === "FAQS") {
+        return <FAQS/>
       }
       this.setState({ redirect: false });
       this.setState({ clickedEntity: null });
