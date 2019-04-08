@@ -1,39 +1,116 @@
+
+const joi = require("joi");
 const express = require("express");
-const Joi = require("joi");
-const uuid = require("uuid");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 const Question = require("../../models/Question");
 
-const QuestionArr = [
-  new Question("What", 30, "omar"),
-  new Question("Why", 27, "folan"),
-  new Question("When", 29, "jack")
-];
+//= =---------------------------------------------------= =//
+//= =--- HANDLE question lists
+//= =---------------------------------------------------= =//
+router
+  .route("/")
+  .post(async (request, response) => {
+    const status = joi.validate(request.body, {
+      quest: joi
+        .string()
+        .min(10)
+        .max(1000)
+        .required(),
+      question_id: joi
+        .number()
+        .min(3)
+        .required(),
+      submit_user: joi
+        .string()
+        .min(3)
+        .max(50)
+        .required(),
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
+    }
+    try {
+      const question = await new Question({
+        _id: mongoose.Types.ObjectId(),
+        quest: request.body.quest,
+        question_id: request.body.question_id,
+        submit_user: request.body.submit_user
+      }).save();
+      return response.json({ data: question });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't create a new question with the following data`
+      });
+    }
+  })
+  .get(async (request, response) => {
+    try {
+      const allQuestions = await Question.find({}).exec();
+      return response.json({ data: allQuestions });
+    } catch (err) {
+      return response.json({
+        error: `Error, Couldn't fetch the list of all questions from the database`
+      });
+    }
+  });
+//= =---------------------------------------------------= =//
 
-//as an authorized or non-authorized i should be able to read questions
+//= =---------------------------------------------------= =//
+//= =--- HANDLE question detail
+//= =---------------------------------------------------= =//
+router
+  .route("/:id")
+  .all(async (request, response, next) => {
+    const status = joi.validate(request.params, {
+      id: joi
+        .string()
+        .length(24)
+        .required()
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
+    }
+    next();
+  })
+  .get(async (request, response) => {
+    try {
+      const question = await Question.findById(request.params.id).exec();
+      return response.json({ data: question });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't find a question given the following id`
+      });
+    }
+  })
+  .put((request, response) => {
+    Question.findByIdAndUpdate(
+      request.params.id,
+      request.body,
+      { new: true },
+      (err, model) => {
+        if (!err) {
+          return response.json({ data: model });
+        } else {
+          return response.json({
+            error: `Error, couldn't update a question given the following data`
+          });
+        }
+      }
+    );
+  })
+  .delete((request, response) => {
+    Question.findByIdAndDelete(request.params.id, (err, model) => {
+      if (!err) {
+        return response.json({ data: null });
+      } else {
+        return response.json({
+          error: `Error, couldn't delete a question given the following data`
+        });
+      }
+    });
+  });
 
-router.get("/Question", (req, res) => res.json({ data: QuestionArr }));
-
-// As an Authorized or non-Authorized user i should be able to create questions
-router.post("/CreateQuestion", (req, res) => {
-  const quest = req.body.quest;
-  const question_id = req.body.question_id;
-  const submit_user = req.body.submit_user;
-
-  if (!quest) return res.status(400).send({ err: "question is required" });
-  if (!question_id || typeof question_id !== "number")
-    return res.status(400).send({ err: "id is required" });
-  if (!submit_user)
-    return res.status(400).send({ err: "Invalid value for id" });
-
-  const newQuestion = {
-    quest: quest,
-    question_id: question_id,
-    submit_user: submit_user
-  };
-  QuestionArr.push(newQuestion);
-  res.send(QuestionArr);
-});
 
 module.exports = router;
