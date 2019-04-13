@@ -12,9 +12,11 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import axios from "axios";
 import moment from "moment";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   card: {
@@ -39,6 +41,15 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 220
   }
 });
 
@@ -49,7 +60,10 @@ class EventsPosts extends React.Component {
       list: [],
       isLoaded: false,
       expanded: false,
-      isAdmin: true
+      isAdmin: true,
+      editEvent: [],
+      editNow: false,
+      redirectToEvents: false
     };
   }
 
@@ -71,14 +85,102 @@ class EventsPosts extends React.Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleEdit(e) {
+    this.setState({ editEvent: e });
+    this.setState({ editNow: true });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirectToEvents) {
+      return <Redirect to="/events" />;
+    }
+  };
+
+  handleChangeName = event => {
+    this.setState({ name: event.target.value });
+  };
+
+  handleChangeDetails = event => {
+    this.setState({ details: event.target.value });
+  };
+
+  handleChangeAge = event => {
+    this.setState({ age: event.target.value });
+  };
+
+  handleChangeEvent_date = event => {
+    this.setState({ event_date: event.target.value });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({ editNow: false });
+    axios
+      .put(`http://localhost:4000/api/events/${this.state.editEvent._id}`, {
+        name: this.state.editEvent.name,
+        details: this.state.editEvent.details,
+        event_date: this.state.editEvent.event_date
+      })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        this.setState({ redirectToEvents: true });
+      });
+  };
+
   render() {
     const { classes } = this.props;
     var { list } = this.state;
+    var { editNow } = this.state;
+    var { editEvent } = this.state;
+    if (editNow) {
+      return (
+        <form className={classes.container} onSubmit={this.handleSubmit}>
+          <TextField
+            required
+            type="text"
+            label="Name"
+            name="Name"
+            defaultValue={editEvent.name}
+            className={classes.textField}
+            helperText="No spaces, min 6 & max 25 characters"
+            onChange={this.handleChangeName}
+            margin="normal"
+          />
 
+          <TextField
+            required
+            type="text"
+            label="Details"
+            name="details"
+            defaultValue={editEvent.details}
+            className={classes.textField}
+            onChange={this.handleChangeDetails}
+            helperText="No spaces, min 6 & max 25 characters"
+            margin="normal"
+          />
+
+          <TextField
+            required
+            type="text"
+            label="Date"
+            name="event_date"
+            defaultValue={editEvent.event_date}
+            className={classes.textField}
+            onChange={this.handleChangeEvent_date}
+            margin="normal"
+          />
+          {this.renderRedirect()}
+          <Button type="submit" color="secondary">
+            Edit
+          </Button>
+        </form>
+      );
+    }
     if (this.state.isLoaded) {
       if (this.state.isAdmin) {
         return list.map(item => (
-          <Card className={classes.card}>
+          <Card key={item._id} className={classes.card}>
             <CardHeader
               avatar={
                 <Avatar aria-label="Recipe" className={classes.avatar}>
@@ -86,8 +188,8 @@ class EventsPosts extends React.Component {
                 </Avatar>
               }
               action={
-                <IconButton>
-                  <MoreVertIcon />
+                <IconButton onClick={e => this.handleEdit(item)}>
+                  Edit
                 </IconButton>
               }
               title={item.name}
