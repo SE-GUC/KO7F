@@ -48,7 +48,8 @@ class EventsPosts extends React.Component {
     this.state = {
       list: [],
       isLoaded: false,
-      expanded: false
+      expanded: false,
+      isAdmin: true
     };
   }
 
@@ -73,28 +74,32 @@ class EventsPosts extends React.Component {
   render() {
     const { classes } = this.props;
     var { list } = this.state;
+
     if (this.state.isLoaded) {
-      return list.map(item => (
-        <Card className={classes.card}>
-          <CardHeader
-            avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
-                {item.name[0]}
-              </Avatar>
-            }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={item.name}
-            subheader={moment(item.event_date).format("YYYY-MM-DD")}
-          />
-          <CardContent>
-            <Typography component="p">{item.details}</Typography>
-          </CardContent>
-        </Card>
-      ));
+      if (this.state.isAdmin) {
+        return list.map(item => (
+          <Card className={classes.card}>
+            <CardHeader
+              avatar={
+                <Avatar aria-label="Recipe" className={classes.avatar}>
+                  {item.name[0]}
+                </Avatar>
+              }
+              action={
+                <IconButton>
+                  <MoreVertIcon />
+                </IconButton>
+              }
+              title={item.name}
+              subheader={moment(item.event_date).format("YYYY-MM-DD")}
+            />
+            <CardContent>
+              <Typography component="p">{item.details}</Typography>
+            </CardContent>
+          </Card>
+        ));
+      } else {
+      }
     } else {
       return (
         <div>Sorry some smart guy on my team has dropped the database</div>

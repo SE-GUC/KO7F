@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+/*import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import NavBar from "../components/NavBar";
-import { login, logout } from "../gloabalState/actions/authActions";
+//import { login, logout } from "../gloabalState/actions/authActions";
 //import "bootstrap/dist/css/bootstrap.min.css";
 
 class Login extends Component {
@@ -78,3 +78,4 @@ export default connect(
   mapStateToProps,
   { login, logout }
 )(Login);
+*/
