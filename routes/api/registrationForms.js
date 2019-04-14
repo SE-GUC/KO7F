@@ -8,7 +8,7 @@ const RegistrationForm = require("../../models/RegistrationForm");
 //= =--- HANDLE RegistrationForm lists
 //= =---------------------------------------------------= =//
 router
-  .route("/reg")
+  .route("/")
   .post(async (request, response) => {
     const status = joi.validate(request.body, {
       username: joi

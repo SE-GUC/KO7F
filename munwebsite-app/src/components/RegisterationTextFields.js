@@ -54,7 +54,7 @@ class RegisterationTextFields extends React.Component {
     event.preventDefault();
 
     axios
-      .post(`http://localhost:4000/api/registration_forms/reg`, {
+      .post(`http://localhost:4000/api/registration_forms`, {
         username: this.state.username,
         password: this.state.password,
         age: this.state.age,

@@ -63,7 +63,8 @@ class EventsPosts extends React.Component {
       isAdmin: true,
       editEvent: [],
       editNow: false,
-      redirectToEvents: false
+      redirectToEvents: false,
+      deleteEventById: 0
     };
   }
 
@@ -90,6 +91,14 @@ class EventsPosts extends React.Component {
     this.setState({ editNow: true });
   }
 
+  handleDelete(e) {
+    axios.delete(`http://localhost:4000/api/events/${e._id}`).then(res => {
+      console.log(res);
+      console.log(res.data);
+      window.location.reload();
+    });
+  }
+
   renderRedirect = () => {
     if (this.state.redirectToEvents) {
       return <Redirect to="/events" />;
@@ -97,24 +106,21 @@ class EventsPosts extends React.Component {
   };
 
   handleChangeName = event => {
-    this.setState({ name: event.target.value });
+    this.state.editEvent.name = event.target.value;
   };
 
   handleChangeDetails = event => {
-    this.setState({ details: event.target.value });
-  };
-
-  handleChangeAge = event => {
-    this.setState({ age: event.target.value });
+    this.state.editEvent.details = event.target.value;
   };
 
   handleChangeEvent_date = event => {
-    this.setState({ event_date: event.target.value });
+    this.state.editEvent.event_date = event.target.value;
   };
 
   handleSubmit = event => {
     event.preventDefault();
     this.setState({ editNow: false });
+
     axios
       .put(`http://localhost:4000/api/events/${this.state.editEvent._id}`, {
         name: this.state.editEvent.name,
@@ -125,6 +131,7 @@ class EventsPosts extends React.Component {
         console.log(res);
         console.log(res.data);
         this.setState({ redirectToEvents: true });
+        this.setState({ editNow: false });
       });
   };
 
@@ -133,6 +140,7 @@ class EventsPosts extends React.Component {
     var { list } = this.state;
     var { editNow } = this.state;
     var { editEvent } = this.state;
+
     if (editNow) {
       return (
         <form className={classes.container} onSubmit={this.handleSubmit}>
@@ -177,6 +185,7 @@ class EventsPosts extends React.Component {
         </form>
       );
     }
+
     if (this.state.isLoaded) {
       if (this.state.isAdmin) {
         return list.map(item => (
@@ -198,6 +207,9 @@ class EventsPosts extends React.Component {
             <CardContent>
               <Typography component="p">{item.details}</Typography>
             </CardContent>
+            <IconButton onClick={e => this.handleDelete(item)}>
+              Delete
+            </IconButton>
           </Card>
         ));
       } else {
