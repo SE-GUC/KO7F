@@ -1,19 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import classnames from "classnames";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
+//import classnames from "classnames";
+//import CardActions from "@material-ui/core/CardActions";
+//import Collapse from "@material-ui/core/Collapse";
+//import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import axios from "axios";
+import moment from "moment";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   card: {
@@ -38,6 +41,15 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 220
   }
 });
 
@@ -47,7 +59,12 @@ class EventsPosts extends React.Component {
     this.state = {
       list: [],
       isLoaded: false,
-      expanded: false
+      expanded: false,
+      isAdmin: true,
+      editEvent: [],
+      editNow: false,
+      redirectToEvents: false,
+      deleteEventById: 0
     };
   }
 
@@ -69,30 +86,150 @@ class EventsPosts extends React.Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleEdit(e) {
+    this.setState({ editEvent: e });
+    this.setState({ editNow: true });
+  }
+
+  handleDelete(e) {
+    axios.delete(`http://localhost:4000/api/events/${e._id}`).then(res => {
+      console.log(res);
+      console.log(res.data);
+      window.location.reload();
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirectToEvents) {
+      return <Redirect to="/events" />;
+    }
+  };
+
+  handleChangeName = event => {
+    this.state.editEvent.name = event.target.value;
+  };
+
+  handleChangeDetails = event => {
+    this.state.editEvent.details = event.target.value;
+  };
+
+  handleChangeEvent_date = event => {
+    this.state.editEvent.event_date = event.target.value;
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({ editNow: false });
+
+    axios
+      .put(`http://localhost:4000/api/events/${this.state.editEvent._id}`, {
+        name: this.state.editEvent.name,
+        details: this.state.editEvent.details,
+        event_date: this.state.editEvent.event_date
+      })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        this.setState({ redirectToEvents: true });
+        this.setState({ editNow: false });
+      });
+  };
+
   render() {
     const { classes } = this.props;
     var { list } = this.state;
-    if (this.state.isLoaded) {
-      return list.map(item => (
-        <Card className={classes.card}>
-          <CardHeader
-            avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
-                R
-              </Avatar>
-            }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={item.name}
-            subheader="September 14, 2016"
+    var { editNow } = this.state;
+    var { editEvent } = this.state;
+
+    if (editNow) {
+      return (
+        <form className={classes.container} onSubmit={this.handleSubmit}>
+          <TextField
+            required
+            type="text"
+            label="Name"
+            name="Name"
+            defaultValue={editEvent.name}
+            className={classes.textField}
+            helperText="No spaces, min 6 & max 25 characters"
+            onChange={this.handleChangeName}
+            margin="normal"
           />
-          <CardContent>
-            <Typography component="p">{item.details}</Typography>
-          </CardContent>
-          <CardActions className={classes.actions} disableActionSpacing>
+
+          <TextField
+            required
+            type="text"
+            label="Details"
+            name="details"
+            defaultValue={editEvent.details}
+            className={classes.textField}
+            onChange={this.handleChangeDetails}
+            helperText="No spaces, min 6 & max 25 characters"
+            margin="normal"
+          />
+
+          <TextField
+            required
+            type="text"
+            label="Date"
+            name="event_date"
+            defaultValue={editEvent.event_date}
+            className={classes.textField}
+            onChange={this.handleChangeEvent_date}
+            margin="normal"
+          />
+          {this.renderRedirect()}
+          <Button type="submit" color="secondary">
+            Edit
+          </Button>
+        </form>
+      );
+    }
+
+    if (this.state.isLoaded) {
+      if (this.state.isAdmin) {
+        return list.map(item => (
+          <Card key={item._id} className={classes.card}>
+            <CardHeader
+              avatar={
+                <Avatar aria-label="Recipe" className={classes.avatar}>
+                  {item.name[0]}
+                </Avatar>
+              }
+              action={
+                <IconButton onClick={e => this.handleEdit(item)}>
+                  Edit
+                </IconButton>
+              }
+              title={item.name}
+              subheader={moment(item.event_date).format("YYYY-MM-DD")}
+            />
+            <CardContent>
+              <Typography component="p">{item.details}</Typography>
+            </CardContent>
+            <IconButton onClick={e => this.handleDelete(item)}>
+              Delete
+            </IconButton>
+          </Card>
+        ));
+      } else {
+      }
+    } else {
+      return (
+        <div>Sorry some smart guy on my team has dropped the database</div>
+      );
+    }
+  }
+}
+
+EventsPosts.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(EventsPosts);
+
+//if i want button to show more
+/*<CardActions className={classes.actions} disableActionSpacing>
             <IconButton
               className={classnames(classes.expand, {
                 [classes.expandOpen]: this.state.expanded
@@ -108,19 +245,4 @@ class EventsPosts extends React.Component {
             <CardContent>
               <Typography paragraph>Method:</Typography>
             </CardContent>
-          </Collapse>
-        </Card>
-      ));
-    } else {
-      return (
-        <div>Sorry some smart guy on my team has dropped the database</div>
-      );
-    }
-  }
-}
-
-EventsPosts.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(EventsPosts);
+          </Collapse>*/

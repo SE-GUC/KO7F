@@ -51,7 +51,7 @@ class EventsSpecifyDateMenu extends React.Component {
           className={classes.button}
           onClick={this.handleClickOpen}
         >
-          Narrow Selection by Date
+          Search by Date
         </Button>
         <Dialog
           disableBackdropClick
