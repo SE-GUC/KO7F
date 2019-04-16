@@ -63,9 +63,13 @@ class EventsPosts extends React.Component {
       isAdmin: true,
       editEvent: [],
       editNow: false,
+      user_id: "",
+      rating: "",
       redirectToEvents: false,
       deleteEventById: 0
     };
+    this.handleUserIdChange = this.handleUserIdChange.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
   }
 
   componentDidMount() {
@@ -77,6 +81,16 @@ class EventsPosts extends React.Component {
       });
     });
   }
+
+  handleRatingChange(event) {
+    this.setState({rating: event.target.value});
+  }
+
+  handleUserIdChange(event) {
+    this.setState({user_id: event.target.value});
+  }
+
+
 
   handleEventClick() {
     this.setState(state => ({ isLoaded: !state.isLoaded }));
@@ -93,6 +107,17 @@ class EventsPosts extends React.Component {
 
   handleDelete(e) {
     axios.delete(`http://localhost:4000/api/events/${e._id}`).then(res => {
+      console.log(res);
+      console.log(res.data);
+      window.location.reload();
+    });
+  }
+
+  handleRate(e) { 
+    var headers = {'Content-Type': 'application/json'};
+    // const {user_id, rating} = this.state;
+    var data = {user_id: this.state.user_id, rating: this.state.rating};
+    axios.post(`http://localhost:4000/api/events/RateEvent/${e._id}`,data, {headers: headers}).then(res => {
       console.log(res);
       console.log(res.data);
       window.location.reload();
@@ -140,7 +165,7 @@ class EventsPosts extends React.Component {
     var { list } = this.state;
     var { editNow } = this.state;
     var { editEvent } = this.state;
-
+    const { rating,user_id } = this.state;
     if (editNow) {
       return (
         <form className={classes.container} onSubmit={this.handleSubmit}>
@@ -207,8 +232,28 @@ class EventsPosts extends React.Component {
             <CardContent>
               <Typography component="p">{item.details}</Typography>
             </CardContent>
+            <CardContent>
+              <label>
+                Rating:
+              </label>
+              <Typography component="p">{item.rating}</Typography>
+            </CardContent>
             <IconButton onClick={e => this.handleDelete(item)}>
               Delete
+            </IconButton>
+            <br />
+            <label>
+            User id:
+            <input type="text" value={this.state.user_id} onChange={this.handleUserIdChange} />
+            </label>
+            <br />
+            <label>
+              Rating:
+              <input type="text" value={this.state.rating} onChange={this.handleRatingChange} />
+            </label>
+            <br />
+            <IconButton onClick={e => this.handleRate(item)}>
+              Rate
             </IconButton>
           </Card>
         ));
