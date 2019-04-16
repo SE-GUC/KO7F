@@ -47,9 +47,19 @@ class EventsPosts extends React.Component {
     super(props);
     this.state = {
       list: [],
+      name: "",
+      details: "",
+      user_id: "",
+      rating: "",
       isLoaded: false,
       expanded: false
     };
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleDetailsChange = this.handleDetailsChange.bind(this);
+    // this.handleUserIdChange = this.handleUserIdChange.bind(this);
+    // this.handleRatingChange = this.handleRatingChange.bind(this);
+    
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -58,6 +68,39 @@ class EventsPosts extends React.Component {
       this.setState({
         list: res.data.data,
         isLoaded: true
+      });
+    });
+  }
+
+  handleNameChange(event) {
+    this.setState({name: event.target.name});
+  }
+  handleDetailsChange(event) {
+    this.setState({details: event.target.details});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const n=this.state.name
+    const d= this.state.details
+    axios.post(`http://localhost:4000/api/events`,{n,d}).then(res => {
+      console.log(res.data.data);
+      this.setState({
+        name: "",
+        details: ""
+      });
+    });
+  }
+
+  handleSubmitRating(event,rating_id) {
+    event.preventDefault();
+    const r=this.state.rating
+    const u= this.state.user_id
+    axios.post(`http://localhost:4000/api/RateEvent/`+rating_id,{r,u}).then(res => {
+      console.log(res.data.data);
+      this.setState({
+        user_id: "",
+        rating: ""
       });
     });
   }
@@ -71,8 +114,23 @@ class EventsPosts extends React.Component {
   };
 
   render() {
+      
     const { classes } = this.props;
-    var { list } = this.state;
+    var { list, name, details } = this.state;
+ 
+    // <form onSubmit={this.handleSubmit}>
+    //     <label>
+    //       Name:
+    //       <input type="text" value={this.state.name} onChange={this.handleNameChange} />
+    //     </label>
+    //     <label>
+    //       Detials:
+    //       <input type="text" value={this.state.details} onChange={this.handleDetialsChange} />
+    //     </label>
+    //     <input type="submit" value="Submit" />
+    // </form>
+    
+
     if (this.state.isLoaded) {
       return list.map(item => (
         <Card className={classes.card}>
@@ -104,6 +162,19 @@ class EventsPosts extends React.Component {
             >
               <ExpandMoreIcon />
             </IconButton>
+
+          <label>
+            User id:
+            <input type="text" value={this.state.user_id} onChange={this.handleUserIdChange} />
+          </label>
+
+          <label>
+            Rating:
+            <input type="text" value={this.state.rating} onChange={this.handleRatingChange} />
+          </label>
+          <button onClick={this.handleSubmitRating.bind(this,item.id)}>
+            Rate
+          </button>
           </CardActions>
           <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
             <CardContent>
