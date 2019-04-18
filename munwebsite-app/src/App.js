@@ -6,6 +6,7 @@ import WelcomePage from "./pages/WelcomePage";
 import Events from "./pages/Events";
 import FAQS_Update_Page from "./pages/FAQS_Update";
 import RegisterUser from "./pages/RegisterUser";
+import contactUsForm from "./pages/contactUsForm.js";
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
             <Route exact path="/faqs/:id" component={FAQS_Update_Page} />
             <Route exact path="/events" component={Events} />
             <Route exact path="/register" component={RegisterUser} />
+            <Route exact path="/contact-us" component={contactUsForm} />
           </div>
         </div>
       </Router>
