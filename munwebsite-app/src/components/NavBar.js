@@ -52,7 +52,7 @@ class NavBar extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <OpenMenu />
             <Typography variant="h6" color="inherit" className={classes.grow}>

@@ -4,6 +4,7 @@
 .App {
   max-width: 420px;
   margin: 0 auto;
+  padding: 60px;
 }
 p {
   text-align: center;
