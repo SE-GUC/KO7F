@@ -272,7 +272,10 @@ class EventsPosts extends React.Component {
       }
     } else {
       return (
-        <div>Sorry some smart guy on my team has dropped the database</div>
+        <div>
+          <div>{nl2br("")}</div>Sorry some smart guy on my team has dropped the
+          database
+        </div>
       );
     }
   }

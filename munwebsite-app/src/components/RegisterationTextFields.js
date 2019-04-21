@@ -5,11 +5,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import { spacing } from "@material-ui/system";
+import nl2br from "react-newline-to-break";
 
 const styles = theme => ({
   container: {
-    paddingTop: "2%",
+    paddingTop: "4%",
     flexWrap: "wrap"
   },
   textField: {
@@ -27,8 +27,20 @@ class RegisterationTextFields extends React.Component {
     major: "",
     isPending: true,
     isAccepted: false,
-    redirectToHome: false
+    redirectToHome: false,
+    usersList: [],
+    isTaken: false
   };
+
+  componentDidMount() {
+    axios.get(`http://localhost:4000/api/users`).then(res => {
+      console.log(res.data.data);
+      this.setState({
+        usersList: res.data.data
+      });
+      console.log(this.state.usersList[1]);
+    });
+  }
 
   renderRedirect = () => {
     if (this.state.redirectToHome) {
@@ -52,89 +64,168 @@ class RegisterationTextFields extends React.Component {
     this.setState({ major: event.target.value });
   };
 
+  refreshIsTaken() {}
+
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ isTaken: false });
 
-    axios
-      .post(`http://localhost:4000/api/registration_forms`, {
-        username: this.state.username,
-        password: this.state.password,
-        age: this.state.age,
-        major: this.state.major,
-        isPending: this.state.isPending,
-        isAccepted: this.state.isAccepted
-      })
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-        this.setState({ redirectToHome: true });
-      });
+    var isTakenAlready = false;
+    for (var i = 0; i < this.state.usersList.length && !isTakenAlready; i++) {
+      if (this.state.username === this.state.usersList[i].name) {
+        this.setState(state => ({ isTaken: !state.isTaken }));
+        isTakenAlready = true;
+      }
+    }
+
+    if (!isTakenAlready) {
+      axios
+        .post(`http://localhost:4000/api/registration_forms`, {
+          username: this.state.username,
+          password: this.state.password,
+          age: this.state.age,
+          major: this.state.major,
+          isPending: this.state.isPending,
+          isAccepted: this.state.isAccepted
+        })
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+          this.setState({ redirectToHome: true });
+        });
+    } else {
+      this.setState({ isTaken: true });
+      console.log(this.state.isTaken);
+    }
   };
 
   render() {
-    const { classes } = this.props;
+    if (this.state.isTaken) {
+      const { classes } = this.props;
 
-    return (
-      <form className={classes.container} onSubmit={this.handleSubmit}>
-        <br />
-        <Grid container spacing={100}>
-          <br />
-          <Grid item xs={11}>
-            <TextField
-              required
-              type="text"
-              label="username"
-              name="username1"
-              className={classes.textField}
-              helperText="No spaces between the charcters"
-              onChange={this.handleChangeUsername}
-              margin="normal"
-            />
-          </Grid>
+      return (
+        <form className={classes.container} onSubmit={this.handleSubmit}>
+          <Grid container spacing={100}>
+            <Grid item xs={11}>
+              <TextField
+                error
+                required
+                type="text"
+                label="username"
+                name="username1"
+                className={classes.textField}
+                helperText="username is already taken"
+                onChange={this.handleChangeUsername}
+                margin="normal"
+              />
+            </Grid>
 
-          <Grid item xs={11}>
-            <TextField
-              required
-              type="password"
-              label="password"
-              name="password"
-              className={classes.textField}
-              onChange={this.handleChangePassword}
-              helperText="No spaces between the charcters"
-              margin="normal"
-            />
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="password"
+                label="password"
+                name="password"
+                className={classes.textField}
+                onChange={this.handleChangePassword}
+                helperText="No spaces between the charcters"
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="number"
+                label="age"
+                name="age"
+                className={classes.textField}
+                onChange={this.handleChangeAge}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="text"
+                label="major"
+                name="major"
+                className={classes.textField}
+                onChange={this.handleChangeMajor}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={11}>
+              {this.renderRedirect()}
+              <Button type="submit" color="secondary">
+                Register
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={11}>
-            <TextField
-              required
-              type="number"
-              label="age"
-              name="age"
-              className={classes.textField}
-              onChange={this.handleChangeAge}
-              margin="normal"
-            />
+        </form>
+      );
+    } else {
+      const { classes } = this.props;
+
+      return (
+        <form className={classes.container} onSubmit={this.handleSubmit}>
+          <Grid container spacing={100}>
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="text"
+                label="username"
+                name="username1"
+                className={classes.textField}
+                helperText="No spaces between the charcters"
+                onChange={this.handleChangeUsername}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="password"
+                label="password"
+                name="password"
+                className={classes.textField}
+                onChange={this.handleChangePassword}
+                helperText="No spaces between the charcters"
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="number"
+                label="age"
+                name="age"
+                className={classes.textField}
+                onChange={this.handleChangeAge}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                required
+                type="text"
+                label="major"
+                name="major"
+                className={classes.textField}
+                onChange={this.handleChangeMajor}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={11}>
+              {this.renderRedirect()}
+              <Button type="submit" color="secondary">
+                Register
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={11}>
-            <TextField
-              required
-              type="text"
-              label="major"
-              name="major"
-              className={classes.textField}
-              onChange={this.handleChangeMajor}
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={11}>
-            {this.renderRedirect()}
-            <Button type="submit" color="secondary">
-              Register
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    );
+        </form>
+      );
+    }
   }
 }
 
