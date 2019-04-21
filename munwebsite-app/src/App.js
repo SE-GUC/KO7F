@@ -7,7 +7,9 @@ import Events from "./pages/Events";
 import FAQS_Update_Page from "./pages/FAQS_Update";
 import RegisterUser from "./pages/RegisterUser";
 import contactUsForm from "./pages/contactUsForm.js";
-
+import FAQS from './components/FAQS/FAQS'
+import CreateFAQS from './components/FAQS/CreateFAQS'
+import DeleteFAQS from './components/FAQS/DeleteFAQS'
 class App extends Component {
   render() {
     return (
@@ -21,6 +23,10 @@ class App extends Component {
             <Route exact path="/events" component={Events} />
             <Route exact path="/register" component={RegisterUser} />
             <Route exact path="/contact-us" component={contactUsForm} />
+            <Route exact path="/faqs" component={FAQS} />
+            <Route exact path="/create-faqs" component={CreateFAQS} />
+            <Route exact path="/delete-faqs" component={DeleteFAQS} />
+
           </div>
         </div>
       </Router>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 
-import "../../node_modules/react-bootstrap-table/css/react-bootstrap-table.css";
+import "../../../node_modules/react-bootstrap-table/css/react-bootstrap-table.css";
 
 class FAQStable extends Component {
   render() {
