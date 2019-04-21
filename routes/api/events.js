@@ -112,20 +112,64 @@ router
     });
   });
 
-router.put("/RateEvent/:id", (req, res) => {
-  const userid = req.body.userid;
-  EventsArr.forEach(Event => {
-    if (Event.event_id === parseInt(req.params.id)) {
-      userEventRating.userid = userid;
-      userEventRating.eventid = req.params.id;
-      userEventRating.rating = eventUpdate;
-      res.json({ msg: "You have successfully rated the Event", Event });
+// router.put("/RateEvent/:id", (req, res) => {
+//   const userid = req.body.userid;
+//   EventsArr.forEach(Event => {
+//     if (Event.event_id === parseInt(req.params.id)) {
+//       userEventRating.userid = userid;
+//       userEventRating.eventid = req.params.id;
+//       userEventRating.rating = eventUpdate;
+//       res.json({ msg: "You have successfully rated the Event", Event });
+//       let sum = 0;
+//       for (let i = 0; i < userEventRating.length; i++) {
+//         sum = sum + userEventRating.rating;
+//       }
+//       userEventRating.rating = sum / userEventRating.length;
+//     }
+//   });
+// });
+
+router
+  .route("/RateEvent/:id")
+  .post(async (request, response) => {
+    const status = joi.validate(request.body, {
+      user_id: joi
+        .string()
+        .min(3)
+        .max(100)
+        .required(),
+      rating: joi
+        .number()
+        .required(),
+    });
+    if (status.error) {
+      return response.json({ error: status.error.details[0].message });
+    }
+    try {
+      const user_event_rating = await new userEventRating({
+        _id: mongoose.Types.ObjectId(),
+        user_id: request.body.user_id,
+        rating: request.body.rating,
+        event_id: request.params.id
+      }).save();
       let sum = 0;
-      for (let i = 0; i < userEventRating.length; i++) {
-        sum = sum + userEventRating.rating;
-      }
-      userEventRating.rating = sum / userEventRating.length;
+      let index = 0;
+      const userEventRatingArr = await userEventRating.find({}).exec();
+      userEventRatingArr.forEach( function(userEventRatingItem) {
+        if (userEventRatingItem.event_id == request.params.id) {
+          sum = sum + userEventRatingItem.rating;
+          index++;
+        }
+      });
+      let average_event_rating = sum/index;
+      const event = await Event.findById(request.params.id).exec();
+      event.rating = average_event_rating;
+      await event.save();
+      return response.json({ data: {user_event_rating, event} });
+    } catch (err) {
+      return response.json({
+        error: `Error, couldn't create a new event with the following data`
+      });
     }
   });
-});
 module.exports = router;

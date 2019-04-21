@@ -4,10 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import { spacing } from "@material-ui/system";
 
 const styles = theme => ({
   container: {
-    display: "flex",
+    paddingTop: "2%",
     flexWrap: "wrap"
   },
   textField: {
@@ -74,51 +76,63 @@ class RegisterationTextFields extends React.Component {
 
     return (
       <form className={classes.container} onSubmit={this.handleSubmit}>
-        <TextField
-          required
-          type="text"
-          label="username"
-          name="username1"
-          className={classes.textField}
-          helperText="No spaces, min 6 & max 25 characters"
-          onChange={this.handleChangeUsername}
-          margin="normal"
-        />
+        <br />
+        <Grid container spacing={100}>
+          <br />
+          <Grid item xs={11}>
+            <TextField
+              required
+              type="text"
+              label="username"
+              name="username1"
+              className={classes.textField}
+              helperText="No spaces between the charcters"
+              onChange={this.handleChangeUsername}
+              margin="normal"
+            />
+          </Grid>
 
-        <TextField
-          required
-          type="password"
-          label="password"
-          name="password"
-          className={classes.textField}
-          onChange={this.handleChangePassword}
-          helperText="No spaces, min 6 & max 25 characters"
-          margin="normal"
-        />
-
-        <TextField
-          required
-          type="number"
-          label="age"
-          name="age"
-          className={classes.textField}
-          onChange={this.handleChangeAge}
-          margin="normal"
-        />
-
-        <TextField
-          required
-          type="text"
-          label="major"
-          name="major"
-          className={classes.textField}
-          onChange={this.handleChangeMajor}
-          margin="normal"
-        />
-        {this.renderRedirect()}
-        <Button type="submit" color="secondary">
-          Register
-        </Button>
+          <Grid item xs={11}>
+            <TextField
+              required
+              type="password"
+              label="password"
+              name="password"
+              className={classes.textField}
+              onChange={this.handleChangePassword}
+              helperText="No spaces between the charcters"
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={11}>
+            <TextField
+              required
+              type="number"
+              label="age"
+              name="age"
+              className={classes.textField}
+              onChange={this.handleChangeAge}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={11}>
+            <TextField
+              required
+              type="text"
+              label="major"
+              name="major"
+              className={classes.textField}
+              onChange={this.handleChangeMajor}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={11}>
+            {this.renderRedirect()}
+            <Button type="submit" color="secondary">
+              Register
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     );
   }

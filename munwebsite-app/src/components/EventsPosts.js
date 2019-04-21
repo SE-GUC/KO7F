@@ -17,6 +17,7 @@ import moment from "moment";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
+import nl2br from "react-newline-to-break";
 
 const styles = theme => ({
   card: {
@@ -24,7 +25,7 @@ const styles = theme => ({
   },
   media: {
     height: 0,
-    paddingTop: "56.25%" // 16:9
+    paddingTop: "56.25%"
   },
   actions: {
     display: "flex"
@@ -63,9 +64,13 @@ class EventsPosts extends React.Component {
       isAdmin: true,
       editEvent: [],
       editNow: false,
+      user_id: "",
+      rating: "",
       redirectToEvents: false,
       deleteEventById: 0
     };
+    this.handleUserIdChange = this.handleUserIdChange.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +81,14 @@ class EventsPosts extends React.Component {
         isLoaded: true
       });
     });
+  }
+
+  handleRatingChange(event) {
+    this.setState({ rating: event.target.value });
+  }
+
+  handleUserIdChange(event) {
+    this.setState({ user_id: event.target.value });
   }
 
   handleEventClick() {
@@ -97,6 +110,21 @@ class EventsPosts extends React.Component {
       console.log(res.data);
       window.location.reload();
     });
+  }
+
+  handleRate(e) {
+    var headers = { "Content-Type": "application/json" };
+    // const {user_id, rating} = this.state;
+    var data = { user_id: this.state.user_id, rating: this.state.rating };
+    axios
+      .post(`http://localhost:4000/api/events/RateEvent/${e._id}`, data, {
+        headers: headers
+      })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        window.location.reload();
+      });
   }
 
   renderRedirect = () => {
@@ -140,7 +168,7 @@ class EventsPosts extends React.Component {
     var { list } = this.state;
     var { editNow } = this.state;
     var { editEvent } = this.state;
-
+    const { rating, user_id } = this.state;
     if (editNow) {
       return (
         <form className={classes.container} onSubmit={this.handleSubmit}>
@@ -189,28 +217,56 @@ class EventsPosts extends React.Component {
     if (this.state.isLoaded) {
       if (this.state.isAdmin) {
         return list.map(item => (
-          <Card key={item._id} className={classes.card}>
-            <CardHeader
-              avatar={
-                <Avatar aria-label="Recipe" className={classes.avatar}>
-                  {item.name[0]}
-                </Avatar>
-              }
-              action={
-                <IconButton onClick={e => this.handleEdit(item)}>
-                  Edit
-                </IconButton>
-              }
-              title={item.name}
-              subheader={moment(item.event_date).format("YYYY-MM-DD")}
-            />
-            <CardContent>
-              <Typography component="p">{item.details}</Typography>
-            </CardContent>
-            <IconButton onClick={e => this.handleDelete(item)}>
-              Delete
-            </IconButton>
-          </Card>
+          <div>
+            <div>{nl2br("")}</div>
+
+            <Card key={item._id} className={classes.card}>
+              <CardHeader
+                avatar={
+                  <Avatar aria-label="Recipe" className={classes.avatar}>
+                    {item.name[0]}
+                  </Avatar>
+                }
+                action={
+                  <IconButton onClick={e => this.handleEdit(item)}>
+                    Edit
+                  </IconButton>
+                }
+                title={item.name}
+                subheader={moment(item.event_date).format("YYYY-MM-DD")}
+              />
+              <CardContent>
+                <Typography component="p">{item.details}</Typography>
+              </CardContent>
+              <CardContent>
+                <label>Rating:</label>
+                <Typography component="p">{item.rating}</Typography>
+              </CardContent>
+              <IconButton onClick={e => this.handleDelete(item)}>
+                Delete
+              </IconButton>
+              <br />
+              <label>
+                User id:
+                <input
+                  type="text"
+                  value={this.state.user_id}
+                  onChange={this.handleUserIdChange}
+                />
+              </label>
+              <br />
+              <label>
+                Rating:
+                <input
+                  type="text"
+                  value={this.state.rating}
+                  onChange={this.handleRatingChange}
+                />
+              </label>
+              <br />
+              <IconButton onClick={e => this.handleRate(item)}>Rate</IconButton>
+            </Card>
+          </div>
         ));
       } else {
       }

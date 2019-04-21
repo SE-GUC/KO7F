@@ -13,6 +13,7 @@ const Announcement = require("./routes/api/announcement");
 const Questions = require("./routes/api/questions");
 const Users = require("./routes/api/users");
 const FAQs = require("./routes/api/faqs");
+const ContactUs = require("./routes/api/contactUs");
 
 //set up express
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api/events", Events);
 app.use("/api/portal_libraries", PortalLibraries);
 app.use("/api/users", Users);
 app.use("/api/faqs", FAQs);
+app.use("/api/contact-us", ContactUs);
 
 // Handling 404
 app.use((req, res) => {
