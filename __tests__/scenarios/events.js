@@ -9,7 +9,8 @@ class EventsTest extends AbstractTests {
       id: null,
       name: null,
       details: null,
-      rating: null
+      rating: null,
+      event_date: null
     };
   }
 
@@ -46,7 +47,8 @@ class EventsTest extends AbstractTests {
   postRequestIndependently() {
     const requestBody = {
       name: "Sokna",
-      details: "from 12-5-2019 to 20-5-2019"
+      details: "from 12-5-2019 to 20-5-2019",
+      event_date: new Date(1859, 1, 1)
     };
 
     test(`Randomly creating a new event,\t\t[=> POST\t${
@@ -69,6 +71,7 @@ class EventsTest extends AbstractTests {
       this.sharedState.name = event.name;
       this.sharedState.details = event.details;
       this.sharedState.rating = event.rating;
+      this.sharedState.event_date = event.event_date;
     });
   }
 
@@ -88,13 +91,17 @@ class EventsTest extends AbstractTests {
       expect(jsonResponse.data.name).toEqual(this.sharedState.name);
       expect(jsonResponse.data.details).toEqual(this.sharedState.details);
       expect(jsonResponse.data.rating).toEqual(this.sharedState.rating);
+      expect(new Date(jsonResponse.data.event_date)).toEqual(
+        this.sharedState.event_date
+      );
     });
   }
 
   putRequestIndependently() {
     const requestBody = {
       name: "Sa7el",
-      details: "from 12-5-2020 to 20-5-2020"
+      details: "from 12-5-2020 to 20-5-2020",
+      event_date: new Date(500, 1, 1)
     };
     test(`Updating the data of that random event,\t[=> PUT\t\t${
       this.base_url
@@ -113,10 +120,12 @@ class EventsTest extends AbstractTests {
       expect(jsonResponse.data.name).toEqual(event.name);
       expect(jsonResponse.data.details).toEqual(event.details);
       expect(jsonResponse.data.rating).toEqual(event.rating);
+      expect(new Date(jsonResponse.data.event_date)).toEqual(event.event_date);
       this.sharedState.id = event._id;
       this.sharedState.name = event.name;
       this.sharedState.details = event.details;
       this.sharedState.rating = event.rating;
+      this.sharedState.event_date = event.event_date;
     });
   }
 

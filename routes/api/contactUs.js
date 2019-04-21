@@ -2,62 +2,52 @@ const joi = require("joi");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const RegistrationForm = require("../../models/RegistrationForm");
+const ContactUs = require("../../models/ContactUs");
 
 //= =---------------------------------------------------= =//
-//= =--- HANDLE RegistrationForm lists
+//= =--- HANDLE contact form lists
 //= =---------------------------------------------------= =//
 router
   .route("/")
   .post(async (request, response) => {
     const status = joi.validate(request.body, {
-      username: joi
-        .string()
-        .min(1)
-        .required(),
-      password: joi
-        .string()
-        .min(1)
-        .required(),
-      age: joi.number(),
-      major: joi.string().required(),
-      isPending: joi.boolean().required(),
-      isAccepted: joi.boolean().required()
+      fname: joi.string().required(),
+      lname: joi.string().required(),
+      email: joi.string().required(),
+      message: joi.string().required()
     });
     if (status.error) {
       return response.json({ error: status.error.details[0].message });
     }
     try {
-      const registrationForm = await new RegistrationForm({
+      const contact_us = await new ContactUs({
         _id: mongoose.Types.ObjectId(),
-        username: request.body.username,
-        password: request.body.password,
-        age: request.body.age,
-        major: request.body.major,
-        isPending: request.body.isPending,
-        isAccepted: request.body.isAccepted
+        fname: request.body.fname,
+        lname: request.body.lname,
+        email: request.body.email,
+        message: request.body.message
       }).save();
-      return response.json({ data: registrationForm });
+      return response.json({ data: contact_us });
     } catch (err) {
       return response.json({
-        error: `Error, couldn't create a new user with the following data`
+        error: `Error, couldn't create a new contact form with the following data`
       });
     }
   })
   .get(async (request, response) => {
     try {
-      const allregistrationForm = await RegistrationForm.find({}).exec();
-      return response.json({ data: allregistrationForm });
+      const allcontactUs = await ContactUs.find({}).exec();
+      return response.json({ data: allcontactUs });
     } catch (err) {
       return response.json({
-        error: `Error, Couldn't fetch the list of all forms from the database`
+        error: `Error, Couldn't fetch the list of all contact forms from the database`
       });
     }
   });
 //= =---------------------------------------------------= =//
 
 //= =---------------------------------------------------= =//
-//= =--- HANDLE RegistrationForm detail
+//= =--- HANDLE contact form detail
 //= =---------------------------------------------------= =//
 router
   .route("/:id")
@@ -75,18 +65,16 @@ router
   })
   .get(async (request, response) => {
     try {
-      const registrationForm = await RegistrationForm.findById(
-        request.params.id
-      ).exec();
-      return response.json({ data: registrationForm });
+      const contactUs = await ContactUs.findById(request.params.id).exec();
+      return response.json({ data: contactUs });
     } catch (err) {
       return response.json({
-        error: `Error, couldn't find an registrationForm given the following id`
+        error: `Error, couldn't find the contact form given the following id`
       });
     }
   })
   .put((request, response) => {
-    RegistrationForm.findByIdAndUpdate(
+    ContactUs.findByIdAndUpdate(
       request.params.id,
       request.body,
       { new: true },
@@ -95,19 +83,19 @@ router
           return response.json({ data: model });
         } else {
           return response.json({
-            error: `Error, couldn't update RegistrationForm given the following data`
+            error: `Error, couldn't update the contact form given the following data`
           });
         }
       }
     );
   })
   .delete((request, response) => {
-    RegistrationForm.findByIdAndDelete(request.params.id, (err, model) => {
+    ContactUs.findByIdAndDelete(request.params.id, (err, model) => {
       if (!err) {
         return response.json({ data: null });
       } else {
         return response.json({
-          error: `Error, couldn't delete RegistrationForm given the following data`
+          error: `Error, couldn't delete the contact form given the following data`
         });
       }
     });

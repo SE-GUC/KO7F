@@ -21,19 +21,9 @@ router
         .string()
         .min(3)
         .required(),
-      age: joi
-        .number()
-        .min(1)
-        .max(5),
-      major: joi
-        .string()
-        .min(3)
-        .max(50),
-      admin : joi
-        .boolean()
-        .required()
-
-
+      age: joi.number(),
+      major: joi.string().max(50),
+      admin: joi.boolean().required()
     });
     if (status.error) {
       return response.json({ error: status.error.details[0].message });
@@ -120,7 +110,5 @@ router
       }
     });
   });
-
-
 
 module.exports = router;

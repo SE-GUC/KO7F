@@ -1,20 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import classnames from "classnames";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-//import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
+//import classnames from "classnames";
+//import CardActions from "@material-ui/core/CardActions";
+//import Collapse from "@material-ui/core/Collapse";
+//import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import axios from "axios";
+import moment from "moment";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   card: {
@@ -39,6 +41,15 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 220
   }
 });
 
@@ -52,14 +63,17 @@ class EventsPosts extends React.Component {
       user_id: "",
       rating: "",
       isLoaded: false,
-      expanded: false
+      expanded: false,
+      isAdmin: true,
+      editEvent: [],
+      editNow: false,
+      user_id: "",
+      rating: "",
+      redirectToEvents: false,
+      deleteEventById: 0
     };
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleDetailsChange = this.handleDetailsChange.bind(this);
-    // this.handleUserIdChange = this.handleUserIdChange.bind(this);
-    // this.handleRatingChange = this.handleRatingChange.bind(this);
-    
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUserIdChange = this.handleUserIdChange.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
   }
 
   componentDidMount() {
@@ -72,37 +86,12 @@ class EventsPosts extends React.Component {
     });
   }
 
-  handleNameChange(event) {
-    this.setState({name: event.target.name});
-  }
-  handleDetailsChange(event) {
-    this.setState({details: event.target.details});
+  handleRatingChange(event) {
+    this.setState({ rating: event.target.value });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    const n=this.state.name
-    const d= this.state.details
-    axios.post(`http://localhost:4000/api/events`,{n,d}).then(res => {
-      console.log(res.data.data);
-      this.setState({
-        name: "",
-        details: ""
-      });
-    });
-  }
-
-  handleSubmitRating(event,rating_id) {
-    event.preventDefault();
-    const r=this.state.rating
-    const u= this.state.user_id
-    axios.post(`http://localhost:4000/api/RateEvent/`+rating_id,{r,u}).then(res => {
-      console.log(res.data.data);
-      this.setState({
-        user_id: "",
-        rating: ""
-      });
-    });
+  handleUserIdChange(event) {
+    this.setState({ user_id: event.target.value });
   }
 
   handleEventClick() {
@@ -113,76 +102,174 @@ class EventsPosts extends React.Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleEdit(e) {
+    this.setState({ editEvent: e });
+    this.setState({ editNow: true });
+  }
+
+  handleDelete(e) {
+    axios.delete(`http://localhost:4000/api/events/${e._id}`).then(res => {
+      console.log(res);
+      console.log(res.data);
+      window.location.reload();
+    });
+  }
+
+  handleRate(e) {
+    var headers = { "Content-Type": "application/json" };
+    // const {user_id, rating} = this.state;
+    var data = { user_id: this.state.user_id, rating: this.state.rating };
+    axios
+      .post(`http://localhost:4000/api/events/RateEvent/${e._id}`, data, {
+        headers: headers
+      })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        window.location.reload();
+      });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirectToEvents) {
+      return <Redirect to="/events" />;
+    }
+  };
+
+  handleChangeName = event => {
+    this.state.editEvent.name = event.target.value;
+  };
+
+  handleChangeDetails = event => {
+    this.state.editEvent.details = event.target.value;
+  };
+
+  handleChangeEvent_date = event => {
+    this.state.editEvent.event_date = event.target.value;
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({ editNow: false });
+
+    axios
+      .put(`http://localhost:4000/api/events/${this.state.editEvent._id}`, {
+        name: this.state.editEvent.name,
+        details: this.state.editEvent.details,
+        event_date: this.state.editEvent.event_date
+      })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        this.setState({ redirectToEvents: true });
+        this.setState({ editNow: false });
+      });
+  };
+
   render() {
       
     const { classes } = this.props;
-    var { list, name, details } = this.state;
- 
-    // <form onSubmit={this.handleSubmit}>
-    //     <label>
-    //       Name:
-    //       <input type="text" value={this.state.name} onChange={this.handleNameChange} />
-    //     </label>
-    //     <label>
-    //       Detials:
-    //       <input type="text" value={this.state.details} onChange={this.handleDetialsChange} />
-    //     </label>
-    //     <input type="submit" value="Submit" />
-    // </form>
-    
+    var { list } = this.state;
+    var { editNow } = this.state;
+    var { editEvent } = this.state;
+    const { rating, user_id } = this.state;
+    if (editNow) {
+      return (
+        <form className={classes.container} onSubmit={this.handleSubmit}>
+          <TextField
+            required
+            type="text"
+            label="Name"
+            name="Name"
+            defaultValue={editEvent.name}
+            className={classes.textField}
+            helperText="No spaces, min 6 & max 25 characters"
+            onChange={this.handleChangeName}
+            margin="normal"
+          />
+
+          <TextField
+            required
+            type="text"
+            label="Details"
+            name="details"
+            defaultValue={editEvent.details}
+            className={classes.textField}
+            onChange={this.handleChangeDetails}
+            helperText="No spaces, min 6 & max 25 characters"
+            margin="normal"
+          />
+
+          <TextField
+            required
+            type="text"
+            label="Date"
+            name="event_date"
+            defaultValue={editEvent.event_date}
+            className={classes.textField}
+            onChange={this.handleChangeEvent_date}
+            margin="normal"
+          />
+          {this.renderRedirect()}
+          <Button type="submit" color="secondary">
+            Edit
+          </Button>
+        </form>
+      );
+    }
 
     if (this.state.isLoaded) {
-      return list.map(item => (
-        <Card className={classes.card}>
-          <CardHeader
-            avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
-                R
-              </Avatar>
-            }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={item.name}
-            subheader="September 14, 2016"
-          />
-          <CardContent>
-            <Typography component="p">{item.details}</Typography>
-          </CardContent>
-          <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton
-              className={classnames(classes.expand, {
-                [classes.expandOpen]: this.state.expanded
-              })}
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label="Show more"
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-
-          <label>
-            User id:
-            <input type="text" value={this.state.user_id} onChange={this.handleUserIdChange} />
-          </label>
-
-          <label>
-            Rating:
-            <input type="text" value={this.state.rating} onChange={this.handleRatingChange} />
-          </label>
-          <button onClick={this.handleSubmitRating.bind(this,item.id)}>
-            Rate
-          </button>
-          </CardActions>
-          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+      if (this.state.isAdmin) {
+        return list.map(item => (
+          <Card key={item._id} className={classes.card}>
+            <CardHeader
+              avatar={
+                <Avatar aria-label="Recipe" className={classes.avatar}>
+                  {item.name[0]}
+                </Avatar>
+              }
+              action={
+                <IconButton onClick={e => this.handleEdit(item)}>
+                  Edit
+                </IconButton>
+              }
+              title={item.name}
+              subheader={moment(item.event_date).format("YYYY-MM-DD")}
+            />
             <CardContent>
-              <Typography paragraph>Method:</Typography>
+              <Typography component="p">{item.details}</Typography>
             </CardContent>
-          </Collapse>
-        </Card>
-      ));
+            <CardContent>
+              <label>Rating:</label>
+              <Typography component="p">{item.rating}</Typography>
+            </CardContent>
+            <IconButton onClick={e => this.handleDelete(item)}>
+              Delete
+            </IconButton>
+            <br />
+            <label>
+              User id:
+              <input
+                type="text"
+                value={this.state.user_id}
+                onChange={this.handleUserIdChange}
+              />
+            </label>
+            <br />
+            <label>
+              Rating:
+              <input
+                type="text"
+                value={this.state.rating}
+                onChange={this.handleRatingChange}
+              />
+            </label>
+            <br />
+            <IconButton onClick={e => this.handleRate(item)}>Rate</IconButton>
+          </Card>
+        ));
+      } else {
+      }
     } else {
       return (
         <div>Sorry some smart guy on my team has dropped the database</div>
@@ -196,3 +283,22 @@ EventsPosts.propTypes = {
 };
 
 export default withStyles(styles)(EventsPosts);
+
+//if i want button to show more
+/*<CardActions className={classes.actions} disableActionSpacing>
+            <IconButton
+              className={classnames(classes.expand, {
+                [classes.expandOpen]: this.state.expanded
+              })}
+              onClick={this.handleExpandClick}
+              aria-expanded={this.state.expanded}
+              aria-label="Show more"
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </CardActions>
+          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography paragraph>Method:</Typography>
+            </CardContent>
+          </Collapse>*/

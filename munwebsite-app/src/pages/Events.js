@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import NavBar from "../components/NavBar";
 import EventsSpecifyDateMenu from "../components/EventsSpecifyDateMenu";
 import EventsPosts from "../components/EventsPosts";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class Events extends React.Component {
   render() {

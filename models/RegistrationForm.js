@@ -1,15 +1,36 @@
-const uuid = require('uuid')
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-class RegistrationForm
-{
-    constructor(RegistrationForm_id,name, major, email)
-    {
-        this.RegistrationForm_id = RegistrationForm_id;
-        this.name=name;
-        this.major=major;
-        this.email=email;
-        this.id = uuid.v4();
-    }
-}
+// Create the schema
+const RegistrationFormSchema = new Schema({
+  username: {
+    type: String,
+    required: [true, "Name field is required"]
+  },
+  password: {
+    type: String,
+    required: [true, "Details field is required"]
+  },
+  age: {
+    type: Number,
+    required: false
+  },
+  major: {
+    type: String,
+    required: false
+  },
+  isPending: {
+    type: Boolean,
+    required: true
+  },
+  isAccepted: {
+    type: Boolean,
+    required: true
+  }
+});
 
-module.exports = RegistrationForm;
+const registrationForm = mongoose.model(
+  "RegistrationForm_DB",
+  RegistrationFormSchema
+);
+module.exports = registrationForm;
