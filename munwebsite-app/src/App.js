@@ -10,6 +10,7 @@ import contactUsForm from "./pages/contactUsForm.js";
 import FAQS from './components/FAQS/FAQS'
 import CreateFAQS from './components/FAQS/CreateFAQS'
 import DeleteFAQS from './components/FAQS/DeleteFAQS'
+import Addfile from './components/AddFilesPortal'
 class App extends Component {
   render() {
     return (
@@ -26,6 +27,7 @@ class App extends Component {
             <Route exact path="/faqs" component={FAQS} />
             <Route exact path="/create-faqs" component={CreateFAQS} />
             <Route exact path="/delete-faqs" component={DeleteFAQS} />
+            <Route exact path="/add-files" component={Addfile} />
 
           </div>
         </div>

@@ -3,19 +3,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
-//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-<<<<<<< HEAD
-import FAQS from './FAQS'
-import Deleteu from './DeleteUser'
-import CreateFAQS from './CreateFAQS'
-import DeleteFAQS from './DeleteFAQS'
 
-const options = ["Home", "Events", "FAQS", "DeleteUser", "Create FAQS","DeleteFAQS"];
-=======
-
-const options = ["Login", "Home", "Events", "FAQS", "Register"];
->>>>>>> master
+const options = ["Login", "Home", "Events", "FAQS", "Register","Add-file"];
 
 const ITEM_HEIGHT = 48;
 
@@ -51,24 +41,13 @@ class OpenMenu extends React.Component {
       else if (this.state.clickedEntity === "Events") {
         return <Redirect push to="/events" />;
       } else if (this.state.clickedEntity === "Home") {
-<<<<<<< HEAD
-        return <Redirect to="/" />;
-      }
-      else if (this.state.clickedEntity === "FAQS") {
-        return <FAQS/>
-      } else if(this.state.clickedEntity ==="DeleteUser"){
-        return <Deleteu/>
-      } else if(this.state.clickedEntity ==="Create FAQS"){
-        return<CreateFAQS/>
-      } else if(this.state.clickedEntity ==="DeleteFAQS"){
-        return<DeleteFAQS/>
-=======
         return <Redirect push to="/home-page" />;
       } else if (this.state.clickedEntity === "FAQS") {
         return <Redirect push to="/faqs" />;
       } else if (this.state.clickedEntity === "Register") {
         return <Redirect push to="/register" />;
->>>>>>> master
+      }else if (this.state.clickedEntity === "Add-file") {
+        return <Redirect push to="/add-files" />;
       }
       this.setState({ redirect: false });
       this.setState({ clickedEntity: null });
