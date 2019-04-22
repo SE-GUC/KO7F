@@ -18,6 +18,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
 import NavBar from '../components/NavBar'
+import nl2br from "react-newline-to-break";
+
 
 class AddFilesPortal extends React.Component{
     constructor(props){
@@ -53,7 +55,9 @@ class AddFilesPortal extends React.Component{
     render(){
         return(
             <div>
+
                   <NavBar navBarTitle="Portal Libraries" />
+                  <div>{nl2br("")}</div>
                   <form onSubmit={this.handlesubmit}>
                   <label>
                     title:

@@ -17,6 +17,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Button from '@material-ui/core/Button';
 import axios from "axios";
 import NavBar from "../../components/NavBar";
+import nl2br from "react-newline-to-break";
+
 
 
 const styles = theme => ({
@@ -80,6 +82,7 @@ const styles = theme => ({
           return (
               <div>
                   <NavBar navBarTitle="Create FAQS" />
+                  <div>{nl2br("")}</div>
                   <form onSubmit={this.handlesubmit}>
                   <label>
                     content:

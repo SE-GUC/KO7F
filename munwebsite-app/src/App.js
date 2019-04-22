@@ -10,13 +10,10 @@ import contactUsForm from "./pages/contactUsForm.js";
 
 import SimpleTable from "./components/RegisterationForms";
 import FAQS from './components/FAQS/FAQS'
-import CreateFAQS from './components/FAQS/CreateFAQS'
 import DeleteFAQS from './components/FAQS/DeleteFAQS'
 import Addfile from './components/AddFilesPortal'
 
-import FAQS from './components/FAQS/FAQS'
 import CreateFAQS from './components/FAQS/CreateFAQS'
-import DeleteFAQS from './components/FAQS/DeleteFAQS'
 
 class App extends Component {
   render() {

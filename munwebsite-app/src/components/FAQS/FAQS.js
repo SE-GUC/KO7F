@@ -5,6 +5,8 @@ import { Container } from "reactstrap";
 import NavBar from "../../components/NavBar";
 import CreateFAQS from './CreateFAQS';
 import {Redirect} from "react-router-dom"
+import nl2br from "react-newline-to-break";
+
 
 
 class FAQS extends Component {
@@ -28,6 +30,8 @@ class FAQS extends Component {
     return (
       <Container>
         <NavBar navBarTitle="FAQS" />
+        <div>{nl2br("")}</div>
+
         <FAQStable data={this.state.faqs}/>
         <button onClick={()=>this.rendercreate()}>Create FAQS</button>
       </Container>
