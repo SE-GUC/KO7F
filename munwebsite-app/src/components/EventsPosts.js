@@ -59,6 +59,10 @@ class EventsPosts extends React.Component {
     super(props);
     this.state = {
       list: [],
+      name: "",
+      details: "",
+      user_id: "",
+      rating: "",
       isLoaded: false,
       expanded: false,
       isAdmin: true,
@@ -164,6 +168,7 @@ class EventsPosts extends React.Component {
   };
 
   render() {
+      
     const { classes } = this.props;
     var { list } = this.state;
     var { editNow } = this.state;

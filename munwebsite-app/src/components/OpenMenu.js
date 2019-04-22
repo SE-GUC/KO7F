@@ -3,10 +3,11 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
-//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 
-const options = ["Login", "Home", "Events", "FAQS", "Register", "Contact US"];
+
+const options = ["Login", "Home", "Events", "FAQS", "Register", "Contact US","Add-file"];
+
 
 const ITEM_HEIGHT = 48;
 
@@ -47,9 +48,12 @@ class OpenMenu extends React.Component {
         return <Redirect push to="/faqs" />;
       } else if (this.state.clickedEntity === "Register") {
         return <Redirect push to="/register" />;
+
       } else if (this.state.clickedEntity === "Contact US") {
         return <Redirect push to="/contact-us" />;
-      }
+        }else if (this.state.clickedEntity === "Add-file") {
+        return <Redirect push to="/add-files" />;
+        }
       this.setState({ redirect: false });
       this.setState({ clickedEntity: null });
     }
