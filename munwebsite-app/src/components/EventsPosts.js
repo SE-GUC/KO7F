@@ -17,6 +17,7 @@ import moment from "moment";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
+import nl2br from "react-newline-to-break";
 
 const styles = theme => ({
   card: {
@@ -24,7 +25,7 @@ const styles = theme => ({
   },
   media: {
     height: 0,
-    paddingTop: "56.25%" // 16:9
+    paddingTop: "56.25%"
   },
   actions: {
     display: "flex"
@@ -221,58 +222,65 @@ class EventsPosts extends React.Component {
     if (this.state.isLoaded) {
       if (this.state.isAdmin) {
         return list.map(item => (
-          <Card key={item._id} className={classes.card}>
-            <CardHeader
-              avatar={
-                <Avatar aria-label="Recipe" className={classes.avatar}>
-                  {item.name[0]}
-                </Avatar>
-              }
-              action={
-                <IconButton onClick={e => this.handleEdit(item)}>
-                  Edit
-                </IconButton>
-              }
-              title={item.name}
-              subheader={moment(item.event_date).format("YYYY-MM-DD")}
-            />
-            <CardContent>
-              <Typography component="p">{item.details}</Typography>
-            </CardContent>
-            <CardContent>
-              <label>Rating:</label>
-              <Typography component="p">{item.rating}</Typography>
-            </CardContent>
-            <IconButton onClick={e => this.handleDelete(item)}>
-              Delete
-            </IconButton>
-            <br />
-            <label>
-              User id:
-              <input
-                type="text"
-                value={this.state.user_id}
-                onChange={this.handleUserIdChange}
+          <div>
+            <div>{nl2br("")}</div>
+
+            <Card key={item._id} className={classes.card}>
+              <CardHeader
+                avatar={
+                  <Avatar aria-label="Recipe" className={classes.avatar}>
+                    {item.name[0]}
+                  </Avatar>
+                }
+                action={
+                  <IconButton onClick={e => this.handleEdit(item)}>
+                    Edit
+                  </IconButton>
+                }
+                title={item.name}
+                subheader={moment(item.event_date).format("YYYY-MM-DD")}
               />
-            </label>
-            <br />
-            <label>
-              Rating:
-              <input
-                type="text"
-                value={this.state.rating}
-                onChange={this.handleRatingChange}
-              />
-            </label>
-            <br />
-            <IconButton onClick={e => this.handleRate(item)}>Rate</IconButton>
-          </Card>
+              <CardContent>
+                <Typography component="p">{item.details}</Typography>
+              </CardContent>
+              <CardContent>
+                <label>Rating:</label>
+                <Typography component="p">{item.rating}</Typography>
+              </CardContent>
+              <IconButton onClick={e => this.handleDelete(item)}>
+                Delete
+              </IconButton>
+              <br />
+              <label>
+                User id:
+                <input
+                  type="text"
+                  value={this.state.user_id}
+                  onChange={this.handleUserIdChange}
+                />
+              </label>
+              <br />
+              <label>
+                Rating:
+                <input
+                  type="text"
+                  value={this.state.rating}
+                  onChange={this.handleRatingChange}
+                />
+              </label>
+              <br />
+              <IconButton onClick={e => this.handleRate(item)}>Rate</IconButton>
+            </Card>
+          </div>
         ));
       } else {
       }
     } else {
       return (
-        <div>Sorry some smart guy on my team has dropped the database</div>
+        <div>
+          <div>{nl2br("")}</div>Sorry some smart guy on my team has dropped the
+          database
+        </div>
       );
     }
   }
